@@ -32,7 +32,7 @@ def fixture_product_json():
 
 def test_get_all_products(service, client, product, product_json):
     service.get_all_products.return_value = [product]
-    
+
     response = client.get("/products")
 
     assert response.status_code == 200
@@ -42,14 +42,14 @@ def test_get_all_products(service, client, product, product_json):
 
 def test_get_product_by_id(service, client, product, product_json):
     service.get_product_by_id.return_value = product
-    
+
     response = client.get("/products/01JFTE35ZRRZWCSKK6TBB1DZCT")
 
     assert response.status_code == 200
-    assert response.json() == [product_json]
+    assert response.json() == product_json
 
     service.get_product_by_id.assert_called_once()
-    
+
 def test_create_product(service, client, product, product_json):
     service.create_product.return_value = product
 

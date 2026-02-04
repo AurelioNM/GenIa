@@ -4,6 +4,12 @@ setup:
 run:
 	docker-compose up --build product-service
 
+down:
+	docker-compose down
+
+clean-db:
+	docker-compose down && docker volume rm product-service_product_database_vol 
+
 coverage:
 	pytest . -v --cov=. && coverage html
 
