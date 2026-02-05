@@ -2,7 +2,8 @@ setup:
 	pip3 install -r requirements.txt
 
 run:
-	docker-compose up --build product-service
+	uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-config configs/log_conf.yml
+# 	docker-compose up --build product-service
 
 down:
 	docker-compose down

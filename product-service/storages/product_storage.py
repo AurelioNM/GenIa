@@ -5,6 +5,7 @@ from psycopg2._psycopg import connection
 
 from models.product import Product
 
+
 class ProductStorage:
     def __init__(self, db_connection: connection):
         self.logger = logging.getLogger(__name__)
@@ -30,9 +31,11 @@ class ProductStorage:
 
                 return product_list
         except DatabaseError as ex:
-            self.logger.error(f"Failed to search all products in DB. DatabaseError: {ex}")
+            self.logger.error(
+                f"Failed to search all products in DB. DatabaseError: {ex}"
+            )
             raise
-    
+
     def get_product_by_id(self, id: str) -> Product:
         try:
             with self.db.cursor() as cursor:
@@ -41,18 +44,20 @@ class ProductStorage:
                     FROM products
                     WHERE id = %s
                 """
-                
+
                 cursor.execute(sql_query, (id,))
                 result = cursor.fetchone()
 
                 if result is None:
                     raise ValueError(f"Product not found with id={id}")
-                
+
                 return self.map_product_row_to_model(result)
         except DatabaseError as ex:
-            self.logger.error(f"Failed to search all products in DB. DatabaseError: {ex}")
+            self.logger.error(
+                f"Failed to search product with id={id} in DB. DatabaseError: {ex}"
+            )
             raise
-    
+
     def create_product(self, product: Product) -> Product:
         self.logger.info("Inserting product in DB")
         try:
@@ -73,7 +78,7 @@ class ProductStorage:
                         product.created_at,
                     ),
                 )
-                
+
                 self.db.commit()
                 return product
         except DatabaseError as ex:
