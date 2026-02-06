@@ -2,6 +2,8 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+import httpx
+from clients.open_weather_client import OpenWeatherClient
 from configs.db_conn import get_database_connection
 from routes.product_router import router as product_router
 from routes.weather_router import router as weather_router
@@ -20,7 +22,8 @@ async def lifespan(app: FastAPI):
     product_service = ProductService(product_storage)
 
     weather_storage = WeatherStorage(db_connection=db_connection)
-    weather_service = WeatherService(weather_storage)
+    open_weather_client = OpenWeatherClient(httpx)
+    weather_service = WeatherService(weather_storage, open_weather_client)
 
     yield {"product_service": product_service, "weather_service": weather_service}
     logger.info("Shutdown application")

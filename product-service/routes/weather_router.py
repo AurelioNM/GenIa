@@ -3,6 +3,7 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
+from clients.dto.open_weather_forecast_dto import OpenWeatherForecastResponse
 from models.weather import CityWeather, PagedCityWeather, PagedCityWeatherV2
 from services.weather_service import WeatherService
 
@@ -90,27 +91,19 @@ def get_paged_cities_weather(
         )
 
 
-@router.get("/v1/run-job", response_model=PagedCityWeatherV2)
-def get_paged_cities_weather(
-    page: int,
-    size: int,
-    service: ServiceDep,
-):
+@router.post("/v1/run-job", response_model=OpenWeatherForecastResponse)
+def run_job(service: ServiceDep):
     try:
-        logger.info(f"Started request getPagedCitiesWeatherV2: page={page} size={size}")
+        logger.info("Started request runJob")
 
-        result: PagedCityWeatherV2 = service.get_cities_weather_v2(page, size)
+        result = service.run_job()
 
-        logger.info(
-            f"Finished request getPagedCitiesWeatherV2: "
-            f"cities_count={len(result.cities_weather)} "
-            f"has_next_page={result.has_next_page}"
-        )
+        logger.info("Finished request runJob")
 
         return result
 
     except ValueError as ex:
-        logger.error(f"Failed request getPagedCitiesWeatherV2. Error: {ex}")
+        logger.error(f"Failed request runJob. Error: {ex}")
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
