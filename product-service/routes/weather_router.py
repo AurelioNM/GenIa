@@ -91,16 +91,14 @@ def get_paged_cities_weather(
         )
 
 
-@router.post("/v1/run-job", response_model=OpenWeatherForecastResponse)
+@router.post("/v1/run-job")
 def run_job(service: ServiceDep):
     try:
         logger.info("Started request runJob")
 
-        result = service.run_job()
+        service.run_job()
 
         logger.info("Finished request runJob")
-
-        return result
 
     except ValueError as ex:
         logger.error(f"Failed request runJob. Error: {ex}")

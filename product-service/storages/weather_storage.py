@@ -2,8 +2,11 @@ from datetime import date
 import logging
 from typing import Dict, List
 from psycopg2 import DatabaseError
+from psycopg2.extras import execute_batch
 from psycopg2._psycopg import connection
+import ulid
 
+from clients.dto.open_weather_forecast_dto import OpenWeatherForecastResponse
 from models.weather import (
     CityWeather,
     PagedCityWeather,
@@ -18,6 +21,72 @@ class WeatherStorage:
     def __init__(self, db_connection: connection):
         self.logger = logging.getLogger(__name__)
         self.db = db_connection
+
+    def update_forecast_by_city(self, city_name: str, weathers: List[Weather]) -> None:
+        try:
+            self.logger.debug(f"Updating forecast on DB by city_name={city_name}")
+
+            with self.db.cursor() as cursor:
+
+                sql_query = """
+                    INSERT INTO weather_records (
+                        id,
+                        city_name,
+                        day,
+                        description,
+                        temp,
+                        temp_min,
+                        temp_max,
+                        feels_like,
+                        humidity,
+                        wind_speed,
+                        created_at,
+                        updated_at
+                    )
+                    VALUES (
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                        NOW(),
+                        NOW()
+                    )
+                    ON CONFLICT (city_name, day)
+                    DO UPDATE SET
+                        description = EXCLUDED.description,
+                        temp = EXCLUDED.temp,
+                        temp_min = EXCLUDED.temp_min,
+                        temp_max = EXCLUDED.temp_max,
+                        feels_like = EXCLUDED.feels_like,
+                        humidity = EXCLUDED.humidity,
+                        wind_speed = EXCLUDED.wind_speed,
+                        updated_at = NOW();
+                """
+
+                values = [
+                    (
+                        str(ulid.new()),
+                        city_name,
+                        weather.day,
+                        weather.description,
+                        weather.temp,
+                        weather.temp_min,
+                        weather.temp_max,
+                        weather.feels_like,
+                        weather.humidity,
+                        weather.wind_speed,
+                    )
+                    for weather in weathers
+                ]
+
+                execute_batch(cursor, sql_query, values)
+                self.db.commit()
+                self.logger.debug(
+                    f"Finished updating forecast on DB by city_name={city_name}"
+                )
+        except DatabaseError as ex:
+            self.db.rollback()
+            self.logger.error(
+                f"Failed to update forecast by city_name={city_name}. DatabaseError: {ex}"
+            )
+            raise
 
     def get_weather_by_city_name(self, city_name: str) -> Weather:
         try:
@@ -55,35 +124,6 @@ class WeatherStorage:
                 f"Failed to search weather by city_name={city_name} in DB. DatabaseError: {ex}"
             )
             raise
-
-    def map_weather_rows_to_model(self, rows) -> CityWeather:
-        first_row = rows[0]
-
-        city_id = first_row[0]
-        city_name = first_row[1]
-
-        weather_list: List[Weather] = []
-
-        for row in rows:
-            weather = Weather(
-                day=row[3],
-                type=self._resolve_weather_type(row[3]),
-                description=row[4],
-                temp=row[5],
-                temp_min=row[6],
-                temp_max=row[7],
-                feels_like=row[8],
-                humidity=row[9],
-                wind_speed=row[10],
-            )
-
-            weather_list.append(weather)
-
-        return CityWeather(
-            city_id=city_id,
-            city_name=city_name,
-            weathers=weather_list,
-        )
 
     def get_paged_cities_weather(
         self,
@@ -219,6 +259,35 @@ class WeatherStorage:
             )
             raise
 
+    def map_weather_rows_to_model(self, rows) -> CityWeather:
+        first_row = rows[0]
+
+        city_id = first_row[0]
+        city_name = first_row[1]
+
+        weather_list: List[Weather] = []
+
+        for row in rows:
+            weather = Weather(
+                day=row[3],
+                type=self.resolve_weather_type(row[3]),
+                description=row[4],
+                temp=row[5],
+                temp_min=row[6],
+                temp_max=row[7],
+                feels_like=row[8],
+                humidity=row[9],
+                wind_speed=row[10],
+            )
+
+            weather_list.append(weather)
+
+        return CityWeather(
+            city_id=city_id,
+            city_name=city_name,
+            weathers=weather_list,
+        )
+
     def _map_rows_to_city_weather(
         self,
         rows: List[tuple],
@@ -239,7 +308,7 @@ class WeatherStorage:
 
             weather = Weather(
                 day=row[3],
-                type=self._resolve_weather_type(row[3]),
+                type=self.resolve_weather_type(row[3]),
                 description=row[4],
                 temp=row[5],
                 temp_min=row[6],
@@ -265,7 +334,7 @@ class WeatherStorage:
                 city_id=row[0],
                 city_name=row[1],
                 day=row[3],
-                type=self._resolve_weather_type(row[3]),
+                type=self.resolve_weather_type(row[3]),
                 description=row[4],
                 temp=row[5],
                 temp_min=row[6],
@@ -279,7 +348,7 @@ class WeatherStorage:
 
         return result
 
-    def _resolve_weather_type(self, weather_day: date) -> WeatherType:
+    def resolve_weather_type(self, weather_day: date) -> WeatherType:
         today = date.today()
 
         if weather_day < today:

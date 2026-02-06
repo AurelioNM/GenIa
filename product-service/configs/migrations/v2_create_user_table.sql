@@ -41,5 +41,6 @@ CREATE TABLE IF NOT EXISTS weather_records (
     CONSTRAINT fk_weathers_city FOREIGN KEY (city_name) REFERENCES cities(name) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
+ALTER TABLE weather_records ADD CONSTRAINT uq_weather_city_day UNIQUE (city_name, day);
 CREATE INDEX IF NOT EXISTS weather_city_name_idx ON weather_records (city_name);
 CREATE INDEX IF NOT EXISTS weather_day_idx ON weather_records (day);
