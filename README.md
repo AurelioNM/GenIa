@@ -12,7 +12,7 @@ A solução é dividida em três blocos principais:
 +-----------------------+        +----------------------+
                                         |
                                         v
-                              +-----------------------+
+                               +-----------------------+
                               |  PostgreSQL DB        |
                               +-----------------------+
                                         |
@@ -20,6 +20,23 @@ A solução é dividida em três blocos principais:
                               +-----------------------+
                               |   Redis Cache         |
                               +-----------------------+
+
+
+
+
+```mermaid
+graph TB
+    FE["🎨 Weather Dashboard<br/>(React Frontend)"]
+    BE["⚙️ Backend API<br/>(Node.js + NestJS)"]
+    PG["🗄️ PostgreSQL DB"]
+    RD["⚡ Redis Cache"]
+    OW["🌐 OpenWeather API<br/>(Externa)"]
+    
+    FE <-->|HTTP/REST| BE
+    BE --> PG
+    BE --> RD
+    BE --> OW
+```
 
 Componentes
 
