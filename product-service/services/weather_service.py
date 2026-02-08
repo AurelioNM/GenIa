@@ -51,3 +51,6 @@ class WeatherService:
             )
 
             self.forecast_service.process_forecast(city_name, forecast)
+
+
+erftdg
