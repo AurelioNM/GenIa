@@ -1,10 +1,12 @@
 # Generative IA studies
 
 ### Sprint 1 - Tasks
-- [ ] separar service costumer-service
-- [ ] separar service weather-service
-- [ ] separar service order-service
-    - [ ] config mongo-db
+- [ ] criar costumer-service
+- [X] separar weather-service
+- [X] separar order-service
+- [ ] order-service
+    - [X] separar parte da IA nele
+    - [X] config mongo-db
     - [ ] sugerir melhores dias pra sair baseado no gosto do cliente e na previsao do tempo
     - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
     previsao do tempo + produtos disponiveis categoria Weather

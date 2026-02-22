@@ -2,14 +2,12 @@ fastApi
 uvicorn
 pydantic
 pytest
-psycopg2-binary
 python-dotenv
 pylint
 PyYAML
 ulid-py
 pytest-cov
 httpx
-boto3
 langchain 
 langchain-community 
 langchain-classic

@@ -9,9 +9,3 @@ PyYAML
 ulid-py
 pytest-cov
 httpx
-boto3
-langchain 
-langchain-community 
-langchain-classic
-langchain-core
-langchain-ollama
