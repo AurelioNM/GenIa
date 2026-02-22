@@ -1,0 +1,62 @@
+version: "3.7"
+
+services:
+
+  # PRODUCT
+  product-service:
+    build:
+      context: ./product-service
+    container_name: product-service
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./product-service:/app
+    working_dir: /app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app
+      --log-config /app/configs/log_conf.yml
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - product-db
+    networks:
+      - gen-ia-network
+
+  product-db:
+    image: postgres:17
+    container_name: product-db
+    ports:
+      - "5440:5432"
+    environment:
+      - POSTGRES_USER=product
+      - POSTGRES_PASSWORD=product
+      - POSTGRES_DB=product-service
+    volumes:
+      - ./product-service/configs/migrations/:/docker-entrypoint-initdb.d/
+      - product_db_vol:/var/lib/postgresql/data
+    networks:
+      - gen-ia-network
+
+  # ORDER
+  order-llm-ollama:
+    image: ollama/ollama:latest
+    container_name: order-llm-ollama
+    ports:
+      - "11440:11434"
+    volumes:
+      - ollama_vol:/root/.ollama
+    networks:
+      - gen-ia-network
+
+volumes:
+  product_db_vol: {}
+  ollama_vol: {}
+
+networks:
+  gen-ia-network:
+    driver: bridge
+  

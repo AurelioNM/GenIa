@@ -1,12 +1,6 @@
-from collections import defaultdict
-from datetime import date, datetime
 import logging
-from typing import Dict, List
 
-from clients.dto.open_weather_forecast_dto import (
-    ForecastItem,
-    OpenWeatherForecastResponse,
-)
+from clients.dto.open_weather_forecast_dto import OpenWeatherForecastResponse
 from clients.open_weather_client import OpenWeatherClient
 from models.weather import PagedCityWeather, PagedCityWeatherV2, Weather
 from services.forecast_service import ForecastService
@@ -51,6 +45,3 @@ class WeatherService:
             )
 
             self.forecast_service.process_forecast(city_name, forecast)
-
-
-erftdg
