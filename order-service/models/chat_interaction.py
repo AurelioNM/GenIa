@@ -3,12 +3,12 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class SuggestionInput(BaseModel):
-    input: str = Field(description="Input for suggestion generation")
+class ChatInteractionInput(BaseModel):
+    input: str = Field(description="Input for chat_interaction generation")
 
 
-class SuggestionOutput(BaseModel):
-    output: str = Field(description="Output for suggestion generation")
+class ChatInteractionOutput(BaseModel):
+    output: str = Field(description="Output for chat_interaction generation")
 
 
 class ProductReviewOutput(BaseModel):

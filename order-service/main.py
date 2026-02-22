@@ -7,8 +7,8 @@ import httpx
 from langchain_ollama import ChatOllama
 from clients.llm_client import LlmClient
 from configs.db_conn import get_database_connection
-from routes.suggestion_router import router as suggestion_router
-from services.suggestion_service import SuggestionService
+from routes.chat_interaction_router import router as chat_interaction_router
+from services.chat_interaction_service import ChatInteractionService
 
 
 logger = logging.getLogger(__name__)
@@ -25,14 +25,14 @@ async def lifespan(app: FastAPI):
         # format="json",  # improves structured reliability
     )
     llm_client = LlmClient(llm=llm)
-    suggestion_service = SuggestionService(llm_client=llm_client)
+    chat_interaction_service = ChatInteractionService(llm_client=llm_client)
 
     yield {
-        "suggestion_service": suggestion_service,
+        "chat_interaction_service": chat_interaction_service,
     }
     logger.info("Shutdown order-service")
 
 
 app = FastAPI(lifespan=lifespan, title="Order Service")
 
-app.include_router(suggestion_router)
+app.include_router(chat_interaction_router)

@@ -1,33 +1,39 @@
 import logging
 
 from clients.llm_client import LlmClient
-from models.suggestion import ProductReviewOutput, SuggestionInput, SuggestionOutput
+from models.chat_interaction import (
+    ProductReviewOutput,
+    ChatInteractionInput,
+    ChatInteractionOutput,
+)
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
 
-class SuggestionService:
+class ChatInteractionService:
     def __init__(self, llm_client: LlmClient):
         self.logger = logging.getLogger(__name__)
         self.llm_client = llm_client
         self.model = "tinyllama"
 
     # Simple prompt
-    def get_suggestion1(self, suggestion: SuggestionInput) -> SuggestionOutput:
-        self.logger.info("Getting suggestion")
+    def get_chat_interaction1(
+        self, chat_interaction: ChatInteractionInput
+    ) -> ChatInteractionOutput:
+        self.logger.info("Getting chat_interaction")
 
         prompt = f"""
-        Give me a marketing description for the product: {suggestion.input}.
+        Give me a marketing description for the product: {chat_interaction.input}.
         Keep it under 50 characters and make it catchy and engaging. 
         Include the product name in the description.
         """
 
         output = self.llm_client.invoke(prompt=prompt)
-        return SuggestionOutput(output=output)
+        return ChatInteractionOutput(output=output)
 
     # Langchain prompt template
-    def get_suggestion2(self) -> SuggestionOutput:
-        self.logger.info("Getting suggestion")
+    def get_chat_interaction2(self) -> ChatInteractionOutput:
+        self.logger.info("Getting chat_interaction")
 
         template_string = """Translate the text \
         that is delimited by triple backticks \
@@ -59,11 +65,11 @@ class SuggestionService:
             f"Promt message: type={type(prompt_message)}, message={prompt_message}"
         )
         output = self.llm_client.invoke2(prompt=prompt_message)
-        return SuggestionOutput(output=output)
+        return ChatInteractionOutput(output=output)
 
     # Langchain parse handling
-    def get_suggestion3(self) -> ProductReviewOutput:
-        self.logger.info("Getting suggestion")
+    def get_chat_interaction3(self) -> ProductReviewOutput:
+        self.logger.info("Getting chat_interaction")
 
         # INPUT
         review_template = """\
@@ -117,8 +123,10 @@ class SuggestionService:
         return parsed_output
 
     # Memory
-    def get_suggestion4(self, suggestion: SuggestionInput) -> SuggestionOutput:
-        self.logger.info("Getting suggestion")
+    def get_chat_interaction4(
+        self, chat_interaction: ChatInteractionInput
+    ) -> ChatInteractionOutput:
+        self.logger.info("Getting chat_interaction")
 
-        output = self.llm_client.invoke3(suggestion.input)
-        return SuggestionOutput(output=output)
+        output = self.llm_client.invoke3(chat_interaction.input)
+        return ChatInteractionOutput(output=output)
