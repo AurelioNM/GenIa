@@ -16,7 +16,7 @@ class CustomerStorage:
         try:
             with self.db.cursor() as cursor:
                 sql_query = """
-                    SELECT id, name, description, price, category, active, created_at, updated_at
+                    SELECT id, name, email, active, created_at, updated_at
                     FROM customers
                     WHERE active = True
                 """
@@ -40,7 +40,7 @@ class CustomerStorage:
         try:
             with self.db.cursor() as cursor:
                 sql_query = """
-                    SELECT id, name, description, price, category, active, created_at, updated_at
+                    SELECT id, name, email, active, created_at, updated_at
                     FROM customers
                     WHERE id = %s
                 """
@@ -65,15 +65,13 @@ class CustomerStorage:
                 cursor.execute(
                     """
                     INSERT INTO customers
-                    (id, name, description, price, category, active, created_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s);
+                    (id, name, email, active, created_at)
+                    VALUES (%s, %s, %s, %s, %s);
                     """,
                     (
                         customer.id,
                         customer.name,
-                        customer.description,
-                        customer.price,
-                        customer.category,
+                        customer.email,
                         customer.active,
                         customer.created_at,
                     ),
@@ -90,10 +88,8 @@ class CustomerStorage:
         return Customer(
             id=row[0],
             name=row[1],
-            description=row[2],
-            price=row[3],
-            category=row[4],
-            active=row[5],
-            created_at=row[6],
-            updated_at=row[7],
+            email=row[2],
+            active=row[3],
+            created_at=row[4],
+            updated_at=row[5],
         )
