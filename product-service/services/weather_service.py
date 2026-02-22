@@ -2,7 +2,7 @@ import logging
 
 from clients.dto.open_weather_forecast_dto import OpenWeatherForecastResponse
 from clients.open_weather_client import OpenWeatherClient
-from models.weather import PagedCityWeather, PagedCityWeatherV2, Weather
+from models.weather import CityWeather, PagedCityWeather, PagedCityWeatherV2, Weather
 from services.forecast_service import ForecastService
 from storages.city_storage import CityStorage
 from storages.weather_storage import WeatherStorage
@@ -22,7 +22,7 @@ class WeatherService:
         self.open_weather_client = open_weather_client
         self.forecast_service = forecast_service
 
-    def get_weather_by_city_name(self, city_name: str) -> Weather:
+    def get_weather_by_city_name(self, city_name: str) -> CityWeather:
         self.logger.info("Getting weather by city_name")
         return self.weather_storage.get_weather_by_city_name(city_name)
 

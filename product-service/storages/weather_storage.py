@@ -88,8 +88,10 @@ class WeatherStorage:
             )
             raise
 
-    def get_weather_by_city_name(self, city_name: str) -> Weather:
+    def get_weather_by_city_name(self, city_name: str) -> CityWeather:
         try:
+            self.logger.debug(f"Getting weather on storage for city={city_name}")
+
             with self.db.cursor() as cursor:
                 sql_query = """
                     SELECT
@@ -117,8 +119,11 @@ class WeatherStorage:
 
                 cursor.execute(sql_query, (city_name,))
                 result = cursor.fetchall()
+                self.logger.debug(f"Raw result from DB: {result}")
 
-                return self.map_weather_rows_to_model(result)
+                mapped_result = self.map_weather_rows_to_model(result)
+                self.logger.debug(f"Mapped model: {mapped_result}")
+                return mapped_result
         except DatabaseError as ex:
             self.logger.error(
                 f"Failed to search weather by city_name={city_name} in DB. DatabaseError: {ex}"
@@ -260,33 +265,39 @@ class WeatherStorage:
             raise
 
     def map_weather_rows_to_model(self, rows) -> CityWeather:
-        first_row = rows[0]
+        try:
+            first_row = rows[0]
 
-        city_id = first_row[0]
-        city_name = first_row[1]
+            city_id = first_row[0]
+            city_name = first_row[1]
 
-        weather_list: List[Weather] = []
+            weather_list: List[Weather] = []
 
-        for row in rows:
-            weather = Weather(
-                day=row[3],
-                type=self.resolve_weather_type(row[3]),
-                description=row[4],
-                temp=row[5],
-                temp_min=row[6],
-                temp_max=row[7],
-                feels_like=row[8],
-                humidity=row[9],
-                wind_speed=row[10],
+            for row in rows:
+                weather = Weather(
+                    day=row[3],
+                    type=self.resolve_weather_type(row[3]),
+                    description=row[4],
+                    temp=row[5],
+                    temp_min=row[6],
+                    temp_max=row[7],
+                    feels_like=row[8],
+                    humidity=row[9],
+                    wind_speed=row[10],
+                )
+
+                weather_list.append(weather)
+
+            city_weather = CityWeather(
+                city_id=city_id,
+                city_name=city_name,
+                weather=weather_list,
             )
 
-            weather_list.append(weather)
-
-        return CityWeather(
-            city_id=city_id,
-            city_name=city_name,
-            weathers=weather_list,
-        )
+            return city_weather
+        except Exception as ex:
+            self.logger.error(f"Error mapping model: {ex}")
+            raise
 
     def _map_rows_to_city_weather(
         self,
