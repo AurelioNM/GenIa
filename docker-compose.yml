@@ -41,6 +41,45 @@ services:
     networks:
       - gen-ia-network
 
+  # WEATHER
+  weather-service:
+    build:
+      context: ./weather-service
+    container_name: weather-service
+    ports:
+      - "8011:8000"
+    volumes:
+      - ./weather-service:/app
+    working_dir: /app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app
+      --log-config /app/configs/log_conf.yml
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - weather-db
+    networks:
+      - gen-ia-network
+
+  weather-db:
+    image: postgres:17
+    container_name: weather-db
+    ports:
+      - "5441:5432"
+    environment:
+      - POSTGRES_USER=weather
+      - POSTGRES_PASSWORD=weather
+      - POSTGRES_DB=weather-service
+    volumes:
+      - ./weather-service/configs/migrations/:/docker-entrypoint-initdb.d/
+      - weather_db_vol:/var/lib/postgresql/data
+    networks:
+      - gen-ia-network
+
   # ORDER
   order-llm-ollama:
     image: ollama/ollama:latest
@@ -54,6 +93,7 @@ services:
 
 volumes:
   product_db_vol: {}
+  weather_db_vol: {}
   ollama_vol: {}
 
 networks:

@@ -6,7 +6,6 @@ import httpx
 
 from clients.dto.open_weather_forecast_dto import OpenWeatherForecastResponse
 from models.weather import PagedCityWeather, PagedCityWeatherV2, Weather
-from storages.weather_storage import WeatherStorage
 
 
 class OpenWeatherClient:
