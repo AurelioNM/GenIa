@@ -128,8 +128,48 @@ services:
     networks:
       - gen-ia-network
 
+  # CUSTOMER
+  customer-service:
+    build:
+      context: ./customer-service
+    container_name: customer-service
+    ports:
+      - "8013:8000"
+    volumes:
+      - ./customer-service:/app
+    working_dir: /app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app
+      --log-config /app/configs/log_conf.yml
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - customer-db
+    networks:
+      - gen-ia-network
+
+  customer-db:
+    image: postgres:17
+    container_name: customer-db
+    ports:
+      - "5442:5432"
+    environment:
+      - POSTGRES_USER=customer
+      - POSTGRES_PASSWORD=customer
+      - POSTGRES_DB=customer-service
+    volumes:
+      - ./customer-service/configs/migrations/:/docker-entrypoint-initdb.d/
+      - customer_db_vol:/var/lib/postgresql/data
+    networks:
+      - gen-ia-network
+
 volumes:
   product_db_vol: {}
+  customer_db_vol: {}
   weather_db_vol: {}
   order_db_vol: {}
   ollama_vol: {}

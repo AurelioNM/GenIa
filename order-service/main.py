@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
 
-    # LLM
     llm = ChatOllama(
         model="llama3",
         temperature=0.0,

@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
 
-    # Product
     product_storage = ProductStorage(db_connection=db_connection)
     product_service = ProductService(product_storage)
 

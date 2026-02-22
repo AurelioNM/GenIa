@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
 
-    # Weather
     weather_storage = WeatherStorage(db_connection=db_connection)
     city_storage = CityStorage(db_connection=db_connection)
     open_weather_client = OpenWeatherClient(httpx)
+
     forecast_service = ForecastService(weather_storage)
     weather_service = WeatherService(
         weather_storage, city_storage, open_weather_client, forecast_service
