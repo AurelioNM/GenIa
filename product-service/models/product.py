@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 from pydantic import BaseModel, Field
 import ulid
 
@@ -16,3 +17,11 @@ class Product(BaseModel):
         default_factory=datetime.now, description="Timestamp of creation"
     )
     updated_at: datetime | None = Field(default=None, description="Timestamp of update")
+
+
+class ProductNames(BaseModel):
+    names: List[str] = Field(description="List of product names")
+
+
+class ProductList(BaseModel):
+    products: List[Product]

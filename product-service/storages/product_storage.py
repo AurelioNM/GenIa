@@ -3,7 +3,7 @@ from typing import List
 from psycopg2 import DatabaseError
 from psycopg2._psycopg import connection
 
-from models.product import Product
+from models.product import Product, ProductNames
 
 
 class ProductStorage:
@@ -55,6 +55,34 @@ class ProductStorage:
         except DatabaseError as ex:
             self.logger.error(
                 f"Failed to search product with id={id} in DB. DatabaseError: {ex}"
+            )
+            raise
+
+    def get_products_by_names(self, names: ProductNames) -> List[Product]:
+        try:
+            if not names.names:
+                return []
+
+            with self.db.cursor() as cursor:
+                placeholders = ",".join(["%s"] * len(names.names))
+
+                sql_query = f"""
+                    SELECT id, name, description, price, category, active, created_at, updated_at
+                    FROM products
+                    WHERE name IN ({placeholders})
+                """
+
+                cursor.execute(sql_query, tuple(names.names))
+                results = cursor.fetchall()
+
+                if not results:
+                    return []
+
+                return [self.map_product_row_to_model(row) for row in results]
+
+        except DatabaseError as ex:
+            self.logger.error(
+                f"Failed to search products with names={names.names} in DB. DatabaseError: {ex}"
             )
             raise
 
