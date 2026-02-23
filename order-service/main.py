@@ -8,7 +8,9 @@ from langchain_ollama import ChatOllama
 from clients.llm_client import LlmClient
 from configs.db_conn import get_database_connection
 from routes.chat_interaction_router import router as chat_interaction_router
+from routes.order_router import router as order_router
 from services.chat_interaction_service import ChatInteractionService
+from services.order_service import OrderService
 
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
 
+    # order
+    order_service = OrderService()
+
+    # llm
     llm = ChatOllama(
         model="llama3",
         temperature=0.0,
@@ -28,6 +34,7 @@ async def lifespan(app: FastAPI):
     chat_interaction_service = ChatInteractionService(llm_client=llm_client)
 
     yield {
+        "order_service": order_service,
         "chat_interaction_service": chat_interaction_service,
     }
     logger.info("Shutdown order-service")
@@ -35,4 +42,5 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan, title="Order Service")
 
+app.include_router(order_router)
 app.include_router(chat_interaction_router)

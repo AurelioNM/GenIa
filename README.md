@@ -7,10 +7,14 @@
 - [ ] order-service
     - [X] separar parte da IA nele
     - [X] config mongo-db
-    - [ ] sugerir melhores dias pra sair baseado no gosto do cliente e na previsao do tempo
-    - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
-    previsao do tempo + produtos disponiveis categoria Weather
     - [ ] processar compra de produtos
+    - [ ] interacao com IA
+        - [ ] sugerir melhores dias pra sair baseado no gosto do cliente e na previsao do tempo
+        - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
+                previsao do tempo + produtos disponiveis categoria Weather
+        - [ ] sugerir produtos de X categoria
+        - [ ] usar paginacao para perguntar pro cliente se ele quer ver mais produtos
+        - [ ] se o cliente tiver intencao de comprar, processar e gerar a compra 
 - Observability
     - [ ] gerar metricas
     - [ ] config prometheus
