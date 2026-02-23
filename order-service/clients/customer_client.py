@@ -11,11 +11,13 @@ class CustomerClient:
         self.logger = logging.getLogger(__name__)
         self.client_http = client_http
 
-    def get_city_forecast(self, customer_name: str) -> Customer:
+    def get_city_forecast(self, customer_email: str) -> Customer:
         try:
-            self.logger.info(f"Getting customer by name={customer_name}")
+            self.logger.info(f"Getting customer by email={customer_email}")
 
-            url = f"{os.getenv('CUSTOMER_BASE_URL')}/v1/customers/name/{customer_name}"
+            url = (
+                f"{os.getenv('CUSTOMER_BASE_URL')}/v1/customers/email/{customer_email}"
+            )
 
             response = self.client_http.get(url)
 

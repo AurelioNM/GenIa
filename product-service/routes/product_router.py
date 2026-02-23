@@ -18,7 +18,7 @@ def get_product_service(request: Request):
 ServiceDep = Annotated[ProductService, Depends(get_product_service)]
 
 
-@router.get("/products", response_model=List[Product])
+@router.get("/v1/products", response_model=List[Product])
 def get_all_products(service: ServiceDep):
     logger.info("Started request getAllProducts")
     products_list: List[Product] = service.get_all_products()
@@ -27,7 +27,7 @@ def get_all_products(service: ServiceDep):
     return products_list
 
 
-@router.get("/products/{id}", response_model=Product)
+@router.get("/v1/products/{id}", response_model=Product)
 def get_product_by_id(id: str, service: ServiceDep):
     try:
         logger.info(f"Started request getProductById: id={id}")
@@ -43,7 +43,9 @@ def get_product_by_id(id: str, service: ServiceDep):
         )
 
 
-@router.post("/products", status_code=status.HTTP_201_CREATED, response_model=Product)
+@router.post(
+    "/v1/products", status_code=status.HTTP_201_CREATED, response_model=Product
+)
 def create_product(product: Product, service: ServiceDep):
     try:
         logger.info(f"Started request createProduct: body={product.model_dump()}")

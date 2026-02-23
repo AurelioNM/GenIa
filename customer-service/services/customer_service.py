@@ -18,6 +18,10 @@ class CustomerService:
         self.logger.info("Getting customer by id")
         return self.storage.get_customer_by_id(id)
 
+    def get_customer_by_email(self, email: str) -> Customer:
+        self.logger.info("Getting customer by email")
+        return self.storage.get_customer_by_email(email)
+
     def create_customer(self, customer: Customer) -> Customer:
         self.logger.info("Creating customer")
         return self.storage.create_customer(customer)

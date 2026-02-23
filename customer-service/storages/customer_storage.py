@@ -58,6 +58,28 @@ class CustomerStorage:
             )
             raise
 
+    def get_customer_by_email(self, email: str) -> Customer:
+        try:
+            with self.db.cursor() as cursor:
+                sql_query = """
+                    SELECT id, name, email, active, created_at, updated_at
+                    FROM customers
+                    WHERE email = %s
+                """
+
+                cursor.execute(sql_query, (email,))
+                result = cursor.fetchone()
+
+                if result is None:
+                    raise ValueError(f"Customer not found with email={email}")
+
+                return self.map_customer_row_to_model(result)
+        except DatabaseError as ex:
+            self.logger.error(
+                f"Failed to search customer with email={email} in DB. DatabaseError: {ex}"
+            )
+            raise
+
     def create_customer(self, customer: Customer) -> Customer:
         self.logger.info("Inserting customer in DB")
         try:
