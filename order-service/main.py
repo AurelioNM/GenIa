@@ -9,10 +9,13 @@ from clients.llm_client import LlmClient
 from clients.customer_client import CustomerClient
 from clients.product_client import ProductClient
 from configs.db_conn import get_database_connection
-from routes.chat_interaction_router import router as chat_interaction_router
+from routes.interaction_router import router as interaction_router
+from routes.chat_studies_router import router as chat_studies_router
 from routes.order_router import router as order_router
-from services.chat_interaction_service import ChatInteractionService
+from services.chat_studies_service import ChatStudiesService
 from services.order_service import OrderService
+from services.interaction_service import InteractionService
+from services.intation_service import IntationService
 from storage.order_storage import OrderStorage
 
 
@@ -41,11 +44,14 @@ async def lifespan(app: FastAPI):
         # format="json",  # improves structured reliability
     )
     llm_client = LlmClient(llm=llm)
-    chat_interaction_service = ChatInteractionService(llm_client=llm_client)
+    intation_service = IntationService(llm_client=llm_client)
+    interaction_service = InteractionService(intation_service=intation_service)
+    chat_studies_service = ChatStudiesService(llm_client=llm_client)
 
     yield {
         "order_service": order_service,
-        "chat_interaction_service": chat_interaction_service,
+        "interaction_service": interaction_service,
+        "chat_studies_service": chat_studies_service,
     }
     logger.info("Shutdown order-service")
 
@@ -53,4 +59,5 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, title="Order Service")
 
 app.include_router(order_router)
-app.include_router(chat_interaction_router)
+app.include_router(interaction_router)
+app.include_router(chat_studies_router)

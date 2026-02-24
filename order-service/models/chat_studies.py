@@ -3,11 +3,11 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class ChatInteractionInput(BaseModel):
-    input: str = Field(description="Input for chat_interaction generation")
+class ChatStudiesInput(BaseModel):
+    input: str = Field(description="Input for chat studiesmn,k")
 
 
-class ChatInteractionOutput(BaseModel):
+class ChatStudiesOutput(BaseModel):
     output: str = Field(description="Output for chat_interaction generation")
 
 

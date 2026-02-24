@@ -1,39 +1,36 @@
 import logging
 
 from clients.llm_client import LlmClient
-from models.chat_interaction import (
+from models.chat_studies import (
     ProductReviewOutput,
-    ChatInteractionInput,
-    ChatInteractionOutput,
+    ChatStudiesInput,
+    ChatStudiesOutput,
 )
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
 
-class ChatInteractionService:
+class ChatStudiesService:
     def __init__(self, llm_client: LlmClient):
         self.logger = logging.getLogger(__name__)
         self.llm_client = llm_client
-        self.model = "tinyllama"
 
     # Simple prompt
-    def get_chat_interaction1(
-        self, chat_interaction: ChatInteractionInput
-    ) -> ChatInteractionOutput:
-        self.logger.info("Getting chat_interaction")
+    def get_chat_studies1(self, chat_studies: ChatStudiesInput) -> ChatStudiesOutput:
+        self.logger.info("Getting chat_studies")
 
         prompt = f"""
-        Give me a marketing description for the product: {chat_interaction.input}.
+        Give me a marketing description for the product: {chat_studies.input}.
         Keep it under 50 characters and make it catchy and engaging. 
         Include the product name in the description.
         """
 
         output = self.llm_client.invoke(prompt=prompt)
-        return ChatInteractionOutput(output=output)
+        return ChatStudiesOutput(output=output)
 
     # Langchain prompt template
-    def get_chat_interaction2(self) -> ChatInteractionOutput:
-        self.logger.info("Getting chat_interaction")
+    def get_chat_studies2(self) -> ChatStudiesOutput:
+        self.logger.info("Getting chat_studies")
 
         template_string = """Translate the text \
         that is delimited by triple backticks \
@@ -65,11 +62,11 @@ class ChatInteractionService:
             f"Promt message: type={type(prompt_message)}, message={prompt_message}"
         )
         output = self.llm_client.invoke2(prompt=prompt_message)
-        return ChatInteractionOutput(output=output)
+        return ChatStudiesOutput(output=output)
 
     # Langchain parse handling
-    def get_chat_interaction3(self) -> ProductReviewOutput:
-        self.logger.info("Getting chat_interaction")
+    def get_chat_studies3(self) -> ProductReviewOutput:
+        self.logger.info("Getting chat_studies")
 
         # INPUT
         review_template = """\
@@ -123,10 +120,8 @@ class ChatInteractionService:
         return parsed_output
 
     # Memory
-    def get_chat_interaction4(
-        self, chat_interaction: ChatInteractionInput
-    ) -> ChatInteractionOutput:
-        self.logger.info("Getting chat_interaction")
+    def get_chat_studies4(self, chat_studies: ChatStudiesInput) -> ChatStudiesOutput:
+        self.logger.info("Getting chat_studies")
 
-        output = self.llm_client.invoke3(chat_interaction.input)
-        return ChatInteractionOutput(output=output)
+        output = self.llm_client.invoke3(chat_studies.input)
+        return ChatStudiesOutput(output=output)
