@@ -11,12 +11,8 @@ class Order(BaseModel):
     customer: Customer
     products: List[Product]
     total_value: float
-    created_at: datetime = Field(
-        default_factory=datetime.now, description="Create product timestamp"
-    )
-    updated_at: datetime | None = Field(
-        default=None, description="Update product timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime | None = Field(default=None)
 
 
 class OrdersPage(BaseModel):

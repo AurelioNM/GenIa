@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from models.order_request import OrderRequest, OrderResponse
+from models.order import OrdersPage
 from services.order_service import OrderService
 
 router = APIRouter()
@@ -16,6 +17,15 @@ def get_order_service(request: Request):
 
 
 ServiceDep = Annotated[OrderService, Depends(get_order_service)]
+
+
+@router.get("/v1/orders/customers/email/{customer_email}", response_model=OrdersPage)
+def get_orders_by_customer_email(customer_email: str, service: ServiceDep):
+    logger.info(f"Started GetOrders with customer email={customer_email}")
+    response: OrdersPage = service.get_orders_by_customer_email(customer_email)
+
+    logger.info(f"GetOrders request finished with response={response}")
+    return response
 
 
 @router.post(

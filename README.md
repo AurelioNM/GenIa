@@ -1,13 +1,19 @@
 # Generative IA studies
 
-### Sprint 1 - Tasks
-- [ ] criar costumer-service
-- [X] separar weather-service
-- [X] separar order-service
+### To Do List
+- [ ] costumer-service
+    - [X] criar service
+    - [X] rota get customer by email
+- [ ] weather-service
+    - [X] separar service
+- [ ] product-service
+    - [X] separar service
+    - [X] rota get products by names
 - [ ] order-service
     - [X] separar parte da IA nele
     - [X] config mongo-db
-    - [ ] processar compra de produtos
+    - [X] rota para processar compra de produtos
+    - [X] rotal para pegar compras por customer email
     - [ ] interacao com IA
         - [ ] sugerir melhores dias pra sair baseado no gosto do cliente e na previsao do tempo
         - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 

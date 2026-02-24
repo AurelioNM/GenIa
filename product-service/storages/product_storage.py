@@ -73,12 +73,14 @@ class ProductStorage:
                 """
 
                 cursor.execute(sql_query, tuple(names.names))
-                results = cursor.fetchall()
+                rows = cursor.fetchall()
+                product_list = []
 
-                if not results:
-                    return []
+                for row in rows:
+                    product = self.map_product_row_to_model(row)
+                    product_list.append(product)
 
-                return [self.map_product_row_to_model(row) for row in results]
+                return product_list
 
         except DatabaseError as ex:
             self.logger.error(

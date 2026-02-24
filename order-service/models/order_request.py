@@ -1,17 +1,18 @@
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class ProductRequest(BaseModel):
-    name: str = Field(description="Product name")
-    quantity: int = Field(description="Product quantity")
+    name: str
+    quantity: int
 
 
 class OrderRequest(BaseModel):
-    customer_email: str = Field(description="Customer email")
+    customer_email: str
     products: List[ProductRequest]
 
 
 class OrderResponse(BaseModel):
-    id: str = Field(description="Order id")
+    id: str
+    total_value: float
