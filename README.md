@@ -15,7 +15,10 @@
     - [X] rota para processar compra de produtos
     - [X] rotal para pegar compras por customer email
     - [ ] interacao com IA
-        - [ ] sugerir melhores dias pra sair baseado no gosto do cliente e na previsao do tempo
+        - [ ] rota para chat com cliente
+        - [ ] estrutura para pegar historico de chat
+        - [ ] Mapear como ficara a parte de intencao
+        - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente 
         - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
                 previsao do tempo + produtos disponiveis categoria Weather
         - [ ] sugerir produtos de X categoria
@@ -28,3 +31,19 @@
 - Tests
 	- [ ] basic load tests
 	- [ ] test end to end apis
+
+fluxo:
+    input do usuario no chat
+    service precisa identificar a intencao (Sugestao de produto, Sugestao de dia para sair, efetivar compra)
+        llm ajuda para identificar a intencao
+    service busca os dados necessarios
+    llm monta a resposta
+
+Possiveis intencoes:
+    CREATE_ORDER
+
+    SUGGEST_PRODUCT_BASED_ON_CATEGORY
+    SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
+    SUGGEST_PRODUCT_BASED_ON_WEATHER
+
+    SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER

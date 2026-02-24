@@ -50,6 +50,7 @@ class OrderService:
         id = self.order_storage.create_order(order)
         return OrderResponse(id=id, total_value=total_value)
 
+    # TODO move these private functions to the models
     def _update_products_quantity(
         self, order_request: OrderRequest, products_list: ProductList
     ):
