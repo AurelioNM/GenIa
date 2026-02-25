@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 from typing import List
 
@@ -26,6 +27,27 @@ class OrderService:
         self.logger.info("Getting orders by customer email...")
         return self.order_storage.get_orders_by_customer_email(customer_email)
 
+    def get_most_purchased_category(self, customer_email: str) -> str:
+        self.logger.info("Getting most purchased category")
+        orders_page: OrdersPage = self.order_storage.get_orders_by_customer_email(
+            customer_email
+        )
+
+        category_counter = defaultdict(int)
+
+        for order in orders_page.orders:
+            for product in order.products:
+                quantity = product.quantity if product.quantity is not None else 1
+                category_counter[product.category] += quantity
+
+        self.logger.info(f"Category quantity dict: {category_counter}")
+
+        # Return the category with most sum of quantity
+        category = max(category_counter, key=category_counter.get)
+
+        self.logger.info(f"Most purchased category: {category}")
+        return category
+
     def create_order(self, order_request: OrderRequest) -> OrderResponse:
         self.logger.info(f"Creating order: {order_request}")
 
@@ -38,6 +60,8 @@ class OrderService:
             ProductNames(names=product_names)
         )
 
+        # TODO this only is necessary for the llm intention flow
+        # maybe move to a previous step
         self._update_products_quantity(order_request, products_list)
 
         total_value = self._get_total_value(products_list.products)

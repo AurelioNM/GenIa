@@ -20,14 +20,15 @@
     - [X] api para pegar compras por customer email
     - [ ] interacao com IA
         - [X] api para chat direto com cliente
+        - [X] Implementar parte que interpreta a intencao do usuario
         - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
         - [ ] estrutura para salvar historico de chat
             - [ ] estrutura para usar o historico do chat na interacao
-        - [X] Implementar parte que interpreta a intencao do usuario
         - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente 
         - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
                 previsao do tempo + produtos disponiveis categoria Weather
-        - [ ] sugerir produtos de X categoria
+        - [X] sugerir produtos de X categoria
+        - [ ] sugerir produtos baseado no historico de compras
         - [ ] usar paginacao para perguntar pro cliente se ele quer ver mais produtos
 - Observability
     - [ ] gerar metricas
@@ -45,6 +46,7 @@
     - [ ] cenario de cliente tentar pedir sugestao de categoria que nao exista
     - [ ] make the IA ask for the products if the customer dont say it
     - [ ] fazer a IA perguntar quais produtos se o cliente falar que quer comprar, mas nao especificar quais
+    - [ ] cliente pediu sugestao de produto baseado no historico, mas nao tem compras anteriores
 
 
 fluxo:
