@@ -59,6 +59,22 @@ def get_products_by_names(names: ProductNames, service: ServiceDep):
         )
 
 
+@router.get("/v1/products/category/{category}", response_model=ProductList)
+def get_products_by_category(category: str, service: ServiceDep):
+    try:
+        logger.info(f"Started request getProductByCategoryV1: category={category}")
+        product: ProductList = service.get_products_by_category(category)
+
+        logger.info(f"Finished request getProductByCategoryV1: response={product}")
+        return product
+    except ValueError as ex:
+        logger.error(f"Failed request getProductByCategoryV1. Error: {ex}")
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
+        )
+
+
 @router.post(
     "/v1/products", status_code=status.HTTP_201_CREATED, response_model=Product
 )

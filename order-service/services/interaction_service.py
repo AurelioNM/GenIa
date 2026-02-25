@@ -32,6 +32,10 @@ class InteractionService:
             )
             self.order_service.create_order(order_request)
 
+        # if output.intation == IntationEnum.SUGGEST_PRODUCT_BASED_ON_CATEGORY:
+        #     products = self.product_service.get_products_by_category(output.category)
+        #     # Feed the IA to suggest the products (Name and price)
+
         if output.intation == IntationEnum.UNKNOWN:
             self.logger.info("Start flow on intation UNKNOWN")
             output.output = "I didn't understand the request. Can you be more specific?"

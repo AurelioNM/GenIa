@@ -19,9 +19,16 @@ class ProductService:
         self.logger.info("Getting product by id")
         return self.storage.get_product_by_id(id)
 
-    def get_products_by_names(self, names: ProductNames) -> Product:
+    def get_products_by_names(self, names: ProductNames) -> ProductList:
         self.logger.info("Getting products by names")
         products = self.storage.get_products_by_names(names)
+
+        return ProductList(products=products)
+
+    def get_products_by_category(self, category: str) -> ProductList:
+        self.logger.info("Getting products by category")
+        products = self.storage.get_products_by_category(category)
+
         return ProductList(products=products)
 
     def create_product(self, product: Product) -> Product:

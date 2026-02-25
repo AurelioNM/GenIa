@@ -3,21 +3,22 @@
 ### To Do List
 - [ ] costumer-service
     - [X] criar service
-    - [X] rota get customer by email
+    - [X] api get customer by email
 - [ ] weather-service
     - [X] separar service
     - [ ] converter cron api em job
     - [ ] processamento do job via sqs
 - [ ] product-service
     - [X] separar service
-    - [X] rota get products by names
+    - [X] api get products by names
+    - [X] api get products by category
 - [ ] order-service
     - [X] separar parte da IA nele
     - [X] config mongo-db
-    - [X] rota para processar compra de produtos
-    - [X] rotal para pegar compras por customer email
+    - [X] api para processar compra de produtos
+    - [X] api para pegar compras por customer email
     - [ ] interacao com IA
-        - [X] rota para chat direto com cliente
+        - [X] api para chat direto com cliente
         - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
         - [ ] estrutura para pegar historico de chat
         - [X] Implementar parte que interpreta a intencao do usuario

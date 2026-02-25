@@ -88,6 +88,32 @@ class ProductStorage:
             )
             raise
 
+    def get_products_by_category(self, category: str) -> List[Product]:
+        try:
+            with self.db.cursor() as cursor:
+
+                sql_query = f"""
+                    SELECT id, name, description, price, category, active, created_at, updated_at
+                    FROM products
+                    WHERE category = %s
+                """
+
+                cursor.execute(sql_query, (category,))
+                rows = cursor.fetchall()
+                product_list = []
+
+                for row in rows:
+                    product = self.map_product_row_to_model(row)
+                    product_list.append(product)
+
+                return product_list
+
+        except DatabaseError as ex:
+            self.logger.error(
+                f"Failed to search products with category={category} in DB. DatabaseError: {ex}"
+            )
+            raise
+
     def create_product(self, product: Product) -> Product:
         self.logger.info("Inserting product in DB")
         try:
