@@ -29,11 +29,11 @@ class OpenWeatherClient:
 
             response.raise_for_status()
 
-            self.logger.debug(f"Get weather forecast response: {response}")
+            self.logger.info(f"Get weather forecast response: {response}")
 
             forecast = OpenWeatherForecastResponse(**response.json())
 
-            self.logger.debug(f"Mapped forecast dto: {forecast}")
+            self.logger.info(f"Mapped forecast dto: {forecast}")
 
             return forecast
         except httpx.RequestError as e:

@@ -21,11 +21,11 @@ class CustomerClient:
 
             response.raise_for_status()
 
-            self.logger.debug(f"Get customer response: {response}")
+            self.logger.info(f"Get customer response: {response}")
 
             customer = Customer(**response.json())
 
-            self.logger.debug(f"Mapped response dto: {customer}")
+            self.logger.info(f"Mapped response dto: {customer}")
 
             return customer
         except httpx.RequestError as e:

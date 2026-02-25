@@ -24,7 +24,7 @@ class WeatherStorage:
 
     def update_forecast_by_city(self, city_name: str, weathers: List[Weather]) -> None:
         try:
-            self.logger.debug(f"Updating forecast on DB by city_name={city_name}")
+            self.logger.info(f"Updating forecast on DB by city_name={city_name}")
 
             with self.db.cursor() as cursor:
 
@@ -78,7 +78,7 @@ class WeatherStorage:
 
                 execute_batch(cursor, sql_query, values)
                 self.db.commit()
-                self.logger.debug(
+                self.logger.info(
                     f"Finished updating forecast on DB by city_name={city_name}"
                 )
         except DatabaseError as ex:
@@ -90,7 +90,7 @@ class WeatherStorage:
 
     def get_weather_by_city_name(self, city_name: str) -> CityWeather:
         try:
-            self.logger.debug(f"Getting weather on storage for city={city_name}")
+            self.logger.info(f"Getting weather on storage for city={city_name}")
 
             with self.db.cursor() as cursor:
                 sql_query = """
@@ -119,10 +119,10 @@ class WeatherStorage:
 
                 cursor.execute(sql_query, (city_name,))
                 result = cursor.fetchall()
-                self.logger.debug(f"Raw result from DB: {result}")
+                self.logger.info(f"Raw result from DB: {result}")
 
                 mapped_result = self.map_weather_rows_to_model(result)
-                self.logger.debug(f"Mapped model: {mapped_result}")
+                self.logger.info(f"Mapped model: {mapped_result}")
                 return mapped_result
         except DatabaseError as ex:
             self.logger.error(

@@ -27,7 +27,7 @@ class OrderService:
         return self.order_storage.get_orders_by_customer_email(customer_email)
 
     def create_order(self, order_request: OrderRequest) -> OrderResponse:
-        self.logger.info("Creating order")
+        self.logger.info(f"Creating order: {order_request}")
 
         customer: Customer = self.customer_client.get_customer_by_email(
             order_request.customer_email
@@ -63,7 +63,7 @@ class OrderService:
         for product in products_list.products:
             product.quantity = quantity_map.get(product.name)
 
-        self.logger.debug(f"Updated products: {products_list}")
+        self.logger.info(f"Updated products: {products_list}")
 
     def _get_total_value(self, products: List[Product]) -> float:
         total = 0.0
@@ -74,5 +74,5 @@ class OrderService:
 
             total += product.price * product.quantity
 
-        self.logger.debug(f"Order total value: {total}")
+        self.logger.info(f"Order total value: {total}")
         return total

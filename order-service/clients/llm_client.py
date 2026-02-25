@@ -26,7 +26,7 @@ class LlmClient:
 
             content = response.content
 
-            self.logger.debug(f"LLM output response: {content}")
+            self.logger.info(f"LLM output response: {content}")
 
             return content
 
@@ -42,7 +42,7 @@ class LlmClient:
 
             content = response.content
 
-            self.logger.debug(f"LLM output response: {content}")
+            self.logger.info(f"LLM output response: {content}")
 
             return content
 
@@ -53,10 +53,10 @@ class LlmClient:
     def invoke3(self, input) -> str:
         try:
             self.logger.info(f"Generating LLM output for prompt={input}")
-            self.logger.debug(f"LLM memory buffer: {self.memory.buffer}")
+            self.logger.info(f"LLM memory buffer: {self.memory.buffer}")
 
             response = self.conversation.predict(input=input)
-            self.logger.debug(f"LLM output response: {response}")
+            self.logger.info(f"LLM output response: {response}")
 
             return response
 

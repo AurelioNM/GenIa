@@ -13,8 +13,8 @@ class OrderStorage:
         self.collection: database.Database = self.db_connection.get_collection("order")
 
     def create_order(self, order: Order) -> str:
-        self.logger.info("Inserting order in DB")
         try:
+            self.logger.info(f"Inserting order in DB: {order.model_dump()}")
             result = self.collection.insert_one(order.model_dump())
 
             return str(result.inserted_id)
@@ -24,8 +24,8 @@ class OrderStorage:
             raise
 
     def get_orders_by_customer_email(self, customer_email: str) -> OrdersPage:
-        self.logger.info("Finding orders in DB")
         try:
+            self.logger.info("Finding orders in DB")
             result = self.collection.find({"customer.email": customer_email})
 
             orders = [Order(**order) for order in result]

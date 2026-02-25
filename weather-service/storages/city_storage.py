@@ -21,7 +21,7 @@ class CityStorage:
                 cursor.execute(sql_query)
                 rows = cursor.fetchall()
 
-                self.logger.debug(f"Get all cities names result: {rows}")
+                self.logger.info(f"Get all cities names result: {rows}")
 
                 city_names: List[str] = []
 
@@ -29,7 +29,7 @@ class CityStorage:
                     city_name = row[0]
                     city_names.append(city_name)
 
-                self.logger.debug(f"Mapped cities names in list: {city_names}")
+                self.logger.info(f"Mapped cities names in list: {city_names}")
 
                 return city_names
         except DatabaseError as ex:

@@ -45,7 +45,9 @@ async def lifespan(app: FastAPI):
     )
     llm_client = LlmClient(llm=llm)
     intation_service = IntationService(llm_client=llm_client)
-    interaction_service = InteractionService(intation_service=intation_service)
+    interaction_service = InteractionService(
+        intation_service=intation_service, order_service=order_service
+    )
     chat_studies_service = ChatStudiesService(llm_client=llm_client)
 
     yield {

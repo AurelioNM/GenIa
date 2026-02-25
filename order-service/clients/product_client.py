@@ -21,11 +21,11 @@ class ProductClient:
 
             response.raise_for_status()
 
-            self.logger.debug(f"Get products response: {response}")
+            self.logger.info(f"Get products response: {response}")
 
             product = ProductList(**response.json())
 
-            self.logger.debug(f"Mapped response dto: {product}")
+            self.logger.info(f"Mapped response dto: {product}")
 
             return product
         except httpx.RequestError as e:

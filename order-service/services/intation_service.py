@@ -1,7 +1,7 @@
 import logging
 
 from clients.llm_client import LlmClient
-from models.interaction import InteractionOutput, IntentationEnum
+from models.interaction import InteractionOutput, IntationEnum
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
@@ -18,28 +18,32 @@ class IntationService:
         intation_template = """\
         For the following customer interaction, extract the following information:
 
+        intation: What is the intation of the client based ONLY on this list of intations in uppercase:
+        - PURCHASE_PRODUCT (customer wants to purchase one or more products)
+        - SUGGEST_PRODUCT_BASED_ON_CATEGORY (customer wants suggestions of products to buy based on a specific category)
+        - SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY (customer wants suggestions of products to buy based on his/her purchase history)
+        - SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER (customer wants to go out based on the weather)
+        - UNKNOWN (if you cannot clearly identify the intation)
+
         output: Your response to the customer input.
+        - If the intation is PURCHASE_PRODUCT, tell the customer the purchase was successfully processed.
+        - Otherwise, respond naturally and helpfully according to the intation.
 
-        intation: What is the intation of the client based on this list of intations in uppercase: \
-        PURCHASE_PRODUCT (means the customer wants to purchase an item), \
-        SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER (means the customer wants to go out based on the weather), \
-        SUGGEST_PRODUCT_BASED_ON_CATEGORY (means the customer wants suggestions of itens \
-        to purchased based on a specific category), \
-        SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY (means the customer wants suggestions of itens \
-        to purchased based on his/her purchase history), \
-        UNKNOWN (if you can not identify the intation based on the list);
+        products:
+        - If the intation is PURCHASE_PRODUCT, extract ALL products mentioned.
+        - Return a list of objects.
+        - Each object must contain:
+            - name: product name as string
+            - quantity: integer quantity requested
+        - If quantity is not explicitly mentioned, assume quantity = 1.
+        - If the intation is NOT PURCHASE_PRODUCT, this field must be null.
 
-        products_names: If the intation is PURCHASE_PRODUCT, fill this field with the product names list.
-
-        text: {text}
+        Customer text:
+        {text}
 
         {format_instructions}
         """
         prompt_template = ChatPromptTemplate.from_template(intation_template)
-
-        self.logger.info(
-            f"Promt template: type={type(prompt_template)}, template={prompt_template}"
-        )
 
         # OUTPUT
         parser = PydanticOutputParser(pydantic_object=InteractionOutput)
@@ -48,16 +52,10 @@ class IntationService:
             text=input,
             format_instructions=parser.get_format_instructions(),
         )
-        self.logger.info(
-            f"Promt message: type={type(prompt_message)}, message={prompt_message}"
-        )
 
         output = self.llm_client.invoke2(prompt=prompt_message)
 
         parsed_output = parser.parse(output)
-        self.logger.info(
-            "========================================================================================"
-        )
-        self.logger.debug(f"Intation response: {parsed_output.model_dump()}")
+        self.logger.info(f"Intation response: {parsed_output.model_dump()}")
 
         return parsed_output

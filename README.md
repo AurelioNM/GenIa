@@ -17,15 +17,15 @@
     - [X] rota para processar compra de produtos
     - [X] rotal para pegar compras por customer email
     - [ ] interacao com IA
-        - [ ] rota para chat direto com cliente
+        - [X] rota para chat direto com cliente
+        - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
         - [ ] estrutura para pegar historico de chat
-        - [ ] Mapear como ficara a parte de intencao
+        - [X] Implementar parte que interpreta a intencao do usuario
         - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente 
         - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
                 previsao do tempo + produtos disponiveis categoria Weather
         - [ ] sugerir produtos de X categoria
         - [ ] usar paginacao para perguntar pro cliente se ele quer ver mais produtos
-        - [ ] se o cliente tiver intencao de comprar, processar e gerar a compra 
 - Observability
     - [ ] gerar metricas
     - [ ] config prometheus
@@ -46,3 +46,7 @@ fluxo:
             Melhorar essa identificacao de intencao sem precisar da LLM (talvez com regex)
     service busca os dados necessarios
     llm monta a resposta
+
+
+# TODO make the IA ask for the products if the customer dont say it.
+# use memory to remember the context
