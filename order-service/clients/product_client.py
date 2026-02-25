@@ -1,7 +1,6 @@
 import logging
 import os
-from typing import List
-from models.product import Product, ProductList, ProductNames
+from models.product import ProductList, ProductNames
 
 import httpx
 
@@ -18,6 +17,27 @@ class ProductClient:
             url = f"{os.getenv('PRODUCT_BASE_URL')}/v1/products/name"
 
             response = self.client_http.post(url, json=product_names.model_dump())
+
+            response.raise_for_status()
+
+            self.logger.info(f"Get products response: {response}")
+
+            product = ProductList(**response.json())
+
+            self.logger.info(f"Mapped response dto: {product}")
+
+            return product
+        except httpx.RequestError as e:
+            self.logger.error(f"Failed to get products: {e}")
+            raise
+
+    def get_products_by_category(self, product_category: str) -> ProductList:
+        try:
+            self.logger.info(f"Getting products by category={product_category}")
+
+            url = f"{os.getenv('PRODUCT_BASE_URL')}/v1/products/category/{product_category}"
+
+            response = self.client_http.get(url)
 
             response.raise_for_status()
 

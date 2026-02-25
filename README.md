@@ -12,6 +12,7 @@
     - [X] separar service
     - [X] api get products by names
     - [X] api get products by category
+    - [ ] enum category
 - [ ] order-service
     - [X] separar parte da IA nele
     - [X] config mongo-db
@@ -20,7 +21,8 @@
     - [ ] interacao com IA
         - [X] api para chat direto com cliente
         - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
-        - [ ] estrutura para pegar historico de chat
+        - [ ] estrutura para salvar historico de chat
+            - [ ] estrutura para usar o historico do chat na interacao
         - [X] Implementar parte que interpreta a intencao do usuario
         - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente 
         - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
@@ -38,6 +40,11 @@
     - [ ] testes unitarios para product-service
 	- [ ] basic load tests
 	- [ ] test end to end apis
+- [ ] debitos funcionais/tecnicos
+    - [ ] cenario de cliente tentar comprar produtos que nao existam
+    - [ ] cenario de cliente tentar pedir sugestao de categoria que nao exista
+    - [ ] make the IA ask for the products if the customer dont say it
+    - [ ] fazer a IA perguntar quais produtos se o cliente falar que quer comprar, mas nao especificar quais
 
 
 fluxo:
@@ -47,7 +54,3 @@ fluxo:
             Melhorar essa identificacao de intencao sem precisar da LLM (talvez com regex)
     service busca os dados necessarios
     llm monta a resposta
-
-
-# TODO make the IA ask for the products if the customer dont say it.
-# use memory to remember the context

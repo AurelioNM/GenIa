@@ -16,6 +16,7 @@ from services.chat_studies_service import ChatStudiesService
 from services.order_service import OrderService
 from services.interaction_service import InteractionService
 from services.intation_service import IntationService
+from services.product_service import ProductService
 from storage.order_storage import OrderStorage
 
 
@@ -44,9 +45,12 @@ async def lifespan(app: FastAPI):
         # format="json",  # improves structured reliability
     )
     llm_client = LlmClient(llm=llm)
+    product_service = ProductService(product_client=product_client)
     intation_service = IntationService(llm_client=llm_client)
     interaction_service = InteractionService(
-        intation_service=intation_service, order_service=order_service
+        intation_service=intation_service,
+        order_service=order_service,
+        product_service=product_service,
     )
     chat_studies_service = ChatStudiesService(llm_client=llm_client)
 

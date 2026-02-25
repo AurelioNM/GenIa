@@ -18,3 +18,8 @@ class ProductList(BaseModel):
 
 class ProductNames(BaseModel):
     names: List[str] = Field(description="List of product names")
+
+
+class ProductSummary(BaseModel):
+    name: str = Field(description="Product name")
+    price: float = Field(description="Product price")

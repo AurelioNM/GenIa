@@ -1,7 +1,7 @@
 import logging
 
 from clients.llm_client import LlmClient
-from models.interaction import InteractionOutput, IntationEnum
+from models.interaction import InteractionOutput
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
@@ -28,6 +28,10 @@ class IntationService:
         output: Your response to the customer input.
         - If the intation is PURCHASE_PRODUCT, tell the customer the purchase was successfully processed.
         - Otherwise, respond naturally and helpfully according to the intation.
+
+        category:
+        - If the intation is SUGGEST_PRODUCT_BASED_ON_CATEGORY, extract in uppercase the category mentioned.
+        - If the intation is NOT SUGGEST_PRODUCT_BASED_ON_CATEGORY, this field must be null.
 
         products:
         - If the intation is PURCHASE_PRODUCT, extract ALL products mentioned.
