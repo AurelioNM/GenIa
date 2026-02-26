@@ -23,7 +23,11 @@ class ProductService:
         products_summary: List[ProductSummary] = []
         for product in products_list.products:
             products_summary.append(
-                ProductSummary(name=product.name, price=product.price)
+                ProductSummary(
+                    name=product.name,
+                    description=product.description,
+                    price=product.price,
+                )
             )
 
         return products_summary

@@ -22,4 +22,5 @@ class ProductNames(BaseModel):
 
 class ProductSummary(BaseModel):
     name: str = Field(description="Product name")
+    description: str | None = None
     price: float = Field(description="Product price")

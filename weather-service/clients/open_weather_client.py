@@ -22,7 +22,6 @@ class OpenWeatherClient:
                 "q": city_name,
                 "appid": os.getenv("OPEN_WEATHER_API_KEY"),
                 "units": "metric",
-                "lang": "pt",
             }
 
             response = self.client_http.get(url, params=params)

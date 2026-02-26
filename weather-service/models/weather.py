@@ -1,8 +1,7 @@
-from datetime import date, datetime
+from datetime import date
 from enum import Enum
 from typing import List
 from pydantic import BaseModel, Field
-import ulid
 
 
 class WeatherType(str, Enum):

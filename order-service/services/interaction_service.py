@@ -4,9 +4,11 @@ from typing import List
 from models.order_request import OrderRequest
 from models.interaction import InteractionOutput, InteractionRequest, IntationEnum
 from models.product import ProductSummary
+from models.weather import Weather
 from services.intation_service import IntationService
 from services.order_service import OrderService
 from services.product_service import ProductService
+from services.weather_service import WeatherService
 
 
 class InteractionService:
@@ -15,11 +17,13 @@ class InteractionService:
         intation_service: IntationService,
         order_service: OrderService,
         product_service: ProductService,
+        weather_service: WeatherService,
     ):
         self.logger = logging.getLogger(__name__)
         self.intation_service = intation_service
         self.order_service = order_service
         self.product_service = product_service
+        self.weather_service = weather_service
 
     def get_chat_interaction(
         self, interaction_request: InteractionRequest
@@ -76,6 +80,19 @@ class InteractionService:
             {product_lines}
 
             Let me know if you'd like to purchase any of them!"""
+
+        if output.intation == IntationEnum.SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER:
+            self.logger.info(
+                "Start flow on intation SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER"
+            )
+            forecast: List[Weather] = self.weather_service.get_weather_forecast()
+            products: List[ProductSummary] = (
+                self.product_service.get_products_by_category("WEATHER")
+            )
+
+            output.output = self.intation_service.process_weather_intation(
+                interaction_request.input, forecast, products
+            )
 
         if output.intation == IntationEnum.UNKNOWN:
             self.logger.info("Start flow on intation UNKNOWN")
