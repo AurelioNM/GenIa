@@ -34,7 +34,6 @@ class OrderService:
         )
 
         category_counter = defaultdict(int)
-
         for order in orders_page.orders:
             for product in order.products:
                 quantity = product.quantity if product.quantity is not None else 1
@@ -42,7 +41,6 @@ class OrderService:
 
         self.logger.info(f"Category quantity dict: {category_counter}")
 
-        # Return the category with most sum of quantity
         category = max(category_counter, key=category_counter.get)
 
         self.logger.info(f"Most purchased category: {category}")

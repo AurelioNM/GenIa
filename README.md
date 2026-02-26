@@ -24,11 +24,10 @@
         - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
         - [ ] estrutura para salvar historico de chat
             - [ ] estrutura para usar o historico do chat na interacao
-        - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente 
-        - [ ] sugerir produtos climaticos para uma data especial. IA precisa considerar 
-                previsao do tempo + produtos disponiveis categoria Weather
+        - [ ] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente
+            - [ ] sugerir produtos categoria WEATHER baseado no clima
         - [X] sugerir produtos de X categoria
-        - [ ] sugerir produtos baseado no historico de compras
+        - [X] sugerir produtos baseado no historico de compras
         - [ ] usar paginacao para perguntar pro cliente se ele quer ver mais produtos
 - Observability
     - [ ] gerar metricas
@@ -56,3 +55,12 @@ fluxo:
             Melhorar essa identificacao de intencao sem precisar da LLM (talvez com regex)
     service busca os dados necessarios
     llm monta a resposta
+
+fluxo SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER:
+    cliente "quero sair num dia ensolarado"
+    llm identifica intencao
+    busca a previsao climatica
+    busca produtos na categoria WEATHER (unbrealla, beach_unbrellla, boots, cape)
+    passa produtos e previsao climatica para llm
+    llm aponta quais dias estarao ensolarados e indica produtos ideais para o clima
+

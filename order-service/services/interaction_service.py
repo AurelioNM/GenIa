@@ -26,7 +26,6 @@ class InteractionService:
     ) -> InteractionOutput:
         self.logger.info("Getting chat interaction")
 
-        # TODO IA needs to give me the category
         output: InteractionOutput = self.intation_service.get_intation(
             interaction_request.input
         )
@@ -59,19 +58,14 @@ class InteractionService:
             self.logger.info(
                 "Start flow on intation SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY"
             )
-
-            # Pegar o historico de compras
-            # Identificar a categoria que mais aparece (levando em conta a quantidade do produto)
             category: str = self.order_service.get_most_purchased_category(
                 interaction_request.customer_email
             )
 
-            # Buscar os produtos nessa categoria
             products: List[ProductSummary] = (
                 self.product_service.get_products_by_category(category)
             )
 
-            # Devolver pro cliente os produtos
             product_lines = "\n".join(
                 f"- {product.name}: ${product.price:.2f}" for product in products
             )

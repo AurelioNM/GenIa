@@ -26,8 +26,14 @@ down:
 
 
 # LLM
-pull-llm-model:
+llm-clean-volume:
+	make down && docker volume rm genia_ollama_vol
+
+llm-pull-model:
 	docker exec -it order-llm-ollama ollama pull llama3
+
+llm-list-models:
+	docker exec -it order-llm-ollama ollama list
 
 
 # SERVICE UTILS
