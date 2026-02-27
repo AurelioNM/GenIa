@@ -3,7 +3,7 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from models.product import Product, ProductList, ProductNames
+from models.product import Product, ProductCategories, ProductList, ProductNames
 from services.product_service import ProductService
 
 router = APIRouter()
@@ -27,7 +27,7 @@ def get_all_products(service: ServiceDep):
     return products_list
 
 
-@router.get("/v1/products/{id}", response_model=Product)
+@router.get("/v1/products/id/{id}", response_model=Product)
 def get_product_by_id(id: str, service: ServiceDep):
     try:
         logger.info(f"Started request getProductByIdV1: id={id}")
@@ -59,7 +59,7 @@ def get_products_by_names(names: ProductNames, service: ServiceDep):
         )
 
 
-@router.get("/v1/products/category/{category}", response_model=ProductList)
+@router.get("/v1/products/categories/{category}", response_model=ProductList)
 def get_products_by_category(category: str, service: ServiceDep):
     try:
         logger.info(f"Started request getProductByCategoryV1: category={category}")
@@ -69,6 +69,22 @@ def get_products_by_category(category: str, service: ServiceDep):
         return product
     except ValueError as ex:
         logger.error(f"Failed request getProductByCategoryV1. Error: {ex}")
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
+        )
+
+
+@router.get("/v1/products/categories", response_model=ProductCategories)
+def get_product_categories(service: ServiceDep):
+    try:
+        logger.info("Started request getProductCategoriesV1")
+        categories: ProductCategories = service.get_product_categories()
+
+        logger.info(f"Finished request getProductCategoriesV1: response={categories}")
+        return categories
+    except ValueError as ex:
+        logger.error(f"Failed request getProductCategoriesV1. Error: {ex}")
 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"

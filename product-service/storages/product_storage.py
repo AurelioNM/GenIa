@@ -3,7 +3,7 @@ from typing import List
 from psycopg2 import DatabaseError
 from psycopg2._psycopg import connection
 
-from models.product import Product, ProductNames
+from models.product import Product, ProductCategories, ProductNames
 
 
 class ProductStorage:
@@ -111,6 +111,30 @@ class ProductStorage:
         except DatabaseError as ex:
             self.logger.error(
                 f"Failed to search products with category={category} in DB. DatabaseError: {ex}"
+            )
+            raise
+
+    def get_product_categories(self) -> ProductCategories:
+        try:
+            with self.db.cursor() as cursor:
+
+                sql_query = f"""
+                    SELECT DISTINCT category
+                    FROM products
+                """
+
+                cursor.execute(sql_query)
+                rows = cursor.fetchall()
+                categories_list = []
+
+                for row in rows:
+                    categories_list.append(row[0])
+
+                return ProductCategories(categories=categories_list)
+
+        except DatabaseError as ex:
+            self.logger.error(
+                f"Failed to search product categories in DB. DatabaseError: {ex}"
             )
             raise
 

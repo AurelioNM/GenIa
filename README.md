@@ -56,11 +56,18 @@ fluxo:
     service busca os dados necessarios
     llm monta a resposta
 
-fluxo SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER:
-    cliente "quero sair num dia ensolarado"
-    llm identifica intencao
-    busca a previsao climatica
-    busca produtos na categoria WEATHER (unbrealla, beach_unbrellla, boots, cape)
-    passa produtos e previsao climatica para llm
-    llm aponta quais dias estarao ensolarados e indica produtos ideais para o clima
+Casos de teste
+PURCHASE_PRODUCT
+I would like to buy 1 Catnip and 5 Xuru
 
+SUGGEST_PRODUCT_BASED_ON_CATEGORY
+Suggest me products on the PETS category
+
+SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
+Suggest me products that match with my purchase history
+
+SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
+I want to go for a walk on a rainy day
+
+UNKNOWN
+Tell me how to do backflips

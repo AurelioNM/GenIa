@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from models.product import Product, ProductList, ProductNames
+from models.product import Product, ProductCategories, ProductList, ProductNames
 from storages.product_storage import ProductStorage
 
 
@@ -30,6 +30,10 @@ class ProductService:
         products = self.storage.get_products_by_category(category)
 
         return ProductList(products=products)
+
+    def get_product_categories(self) -> ProductCategories:
+        self.logger.info("Getting product categories")
+        return self.storage.get_product_categories()
 
     def create_product(self, product: Product) -> Product:
         self.logger.info("Creating product")

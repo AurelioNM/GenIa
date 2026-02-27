@@ -4,6 +4,7 @@ import os
 
 from fastapi import FastAPI
 import httpx
+from langchain_groq import ChatGroq
 from langchain_ollama import ChatOllama
 from clients.llm_client import LlmClient
 from clients.customer_client import CustomerClient
@@ -49,13 +50,15 @@ async def lifespan(app: FastAPI):
     )
 
     # llm
-    llm = ChatOllama(
+    llm_ollama = ChatOllama(
         model="llama3",
         temperature=0.0,
         base_url=os.getenv("OLLAMA_BASE_URL"),
-        # format="json",  # improves structured reliability
     )
-    llm_client = LlmClient(llm=llm)
+
+    llm_groq = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0.7)
+
+    llm_client = LlmClient(llm_ollama=llm_ollama, llm_groq=llm_groq)
     intation_service = IntationService(llm_client=llm_client)
 
     # interaction

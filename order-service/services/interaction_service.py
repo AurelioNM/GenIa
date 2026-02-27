@@ -74,6 +74,7 @@ class InteractionService:
                 f"- {product.name}: ${product.price:.2f}" for product in products
             )
 
+            output.category = category
             output.output = f"""Here are some great options based on your \
             most purchased category {category}:
 

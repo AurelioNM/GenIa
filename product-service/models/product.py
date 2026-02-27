@@ -23,5 +23,9 @@ class ProductNames(BaseModel):
     names: List[str] = Field(description="List of product names")
 
 
+class ProductCategories(BaseModel):
+    categories: List[str] = Field(description="List of product categories")
+
+
 class ProductList(BaseModel):
     products: List[Product]

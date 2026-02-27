@@ -3,6 +3,7 @@ import os
 
 
 import httpx
+from langchain_groq import ChatGroq
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, BaseMessage
 from langchain_classic.chains import ConversationChain
@@ -10,19 +11,22 @@ from langchain_classic.memory import ConversationBufferMemory
 
 
 class LlmClient:
-    def __init__(self, llm: ChatOllama):
+    def __init__(self, llm_ollama: ChatOllama, llm_groq: ChatGroq):
         self.logger = logging.getLogger(__name__)
-        self.llm = llm
+        self.llm_ollama = llm_ollama
+        self.llm_groq = llm_groq
 
         # Memory config TODO move to constructor
         self.memory = ConversationBufferMemory()
-        self.conversation = ConversationChain(llm=llm, memory=self.memory, verbose=True)
+        self.conversation = ConversationChain(
+            llm=llm_ollama, memory=self.memory, verbose=True
+        )
 
     def invoke(self, prompt: str) -> str:
         try:
             self.logger.info(f"Generating LLM output for prompt={prompt}")
 
-            response = self.llm.invoke([HumanMessage(content=prompt)])
+            response = self.llm_groq.invoke([HumanMessage(content=prompt)])
 
             content = response.content
 
@@ -38,7 +42,7 @@ class LlmClient:
         try:
             self.logger.info(f"Generating LLM output for prompt={prompt}")
 
-            response = self.llm.invoke(prompt)
+            response = self.llm_groq.invoke(prompt)
 
             content = response.content
 
