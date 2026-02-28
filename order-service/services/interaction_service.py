@@ -10,6 +10,7 @@ from services.order_service import OrderService
 from services.product_service import ProductService
 from services.cache_service import CacheService
 from services.weather_service import WeatherService
+from storage.question_storage import QuestionStorage
 
 
 class InteractionService:
@@ -20,6 +21,7 @@ class InteractionService:
         product_service: ProductService,
         weather_service: WeatherService,
         cache_service: CacheService,
+        question_storage: QuestionStorage,
     ):
         self.logger = logging.getLogger(__name__)
         self.intation_service = intation_service
@@ -27,6 +29,7 @@ class InteractionService:
         self.product_service = product_service
         self.weather_service = weather_service
         self.cache_service = cache_service
+        self.question_storage = question_storage
 
     def get_chat_interaction(
         self, interaction_request: InteractionRequest, session_id: str
@@ -52,6 +55,9 @@ class InteractionService:
 
         if output.intation == IntationEnum.SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER:
             self._execute_day_suggestion_on_weather_flow(interaction_request, output)
+
+        if output.intation == IntationEnum.TARANTINO_QUESTION:
+            self._execute_tarantino_question_flow(interaction_request, output)
 
         self.cache_service.save_chat_history(
             session_id, history, interaction_request, output
@@ -127,4 +133,14 @@ class InteractionService:
         output.category = "WEATHER"
         output.output = self.intation_service.process_weather_intation(
             input.input, forecast, products
+        )
+
+    def _execute_tarantino_question_flow(
+        self, input: InteractionRequest, output: InteractionOutput
+    ):
+        self.logger.info("Executing flow for intation TARANTINO_QUESTION")
+        questions = self.question_storage.search_similar_questions(input.input)
+
+        output.output = self.intation_service.process_question_intation(
+            input.input, questions
         )

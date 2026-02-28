@@ -29,22 +29,27 @@ def create_file():
 
         data = [
             {
+                "subject": "TARANTINO",
                 "question": "Which films were directed by Quentin Tarantino?",
                 "answer": "Some films directed by Quentin Tarantino include Pulp Fiction, Kill Bill Vol. 1, Kill Bill Vol. 2, Django Unchained, Inglourious Basterds, and Once Upon a Time in Hollywood.",
             },
             {
+                "subject": "TARANTINO",
                 "question": "Which Tarantino film won an Oscar?",
                 "answer": "Django Unchained and Pulp Fiction won Oscars. Tarantino won for Best Original Screenplay.",
             },
             {
+                "subject": "TARANTINO",
                 "question": "What is Tarantino's characteristic style?",
                 "answer": "Tarantino is known for long and striking dialogues, stylized violence, non-linear storytelling, and impactful soundtracks.",
             },
             {
+                "subject": "TARANTINO",
                 "question": "In what year was Pulp Fiction released?",
                 "answer": "Pulp Fiction was released in 1994.",
             },
             {
+                "subject": "TARANTINO",
                 "question": "Who stars in Kill Bill?",
                 "answer": "Uma Thurman is the protagonist of Kill Bill.",
             },

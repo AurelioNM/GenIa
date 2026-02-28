@@ -60,5 +60,8 @@ Suggest me products that match with my purchase history
 SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
 I want to go for a walk on a rainy day
 
+TARANTINO_QUESTION
+Did Tarantino won the oscar?
+
 UNKNOWN
 Tell me how to do backflips

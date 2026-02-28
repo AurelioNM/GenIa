@@ -83,6 +83,7 @@ async def lifespan(app: FastAPI):
         product_service=product_service,
         weather_service=weather_service,
         cache_service=cache_service,
+        question_storage=question_storage,
     )
 
     # studies

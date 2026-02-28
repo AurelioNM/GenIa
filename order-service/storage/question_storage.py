@@ -3,7 +3,7 @@ import os
 from typing import List
 
 from langchain_community.embeddings import OllamaEmbeddings
-from pymongo import MongoClient, database
+from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from models.question_and_answer import QuestionAndAnswer
 
@@ -18,47 +18,6 @@ class QuestionStorage:
             base_url=os.getenv("OLLAMA_BASE_URL"),
         )
         self.min_score = 0.80
-
-    def create_question_and_answer(
-        self, question_and_answers: List[QuestionAndAnswer]
-    ) -> str:
-        try:
-            self.logger.info(
-                f"Generating embeddings and in DB: Q&A={question_and_answers}"
-            )
-
-            self.logger.info(f"Generating test embedding")
-
-            test = self.embedding_model.embed_query("hello world")
-            self.logger.info(f"Generated test embedding: {test[:5]}...")
-
-            documents = []
-
-            for entity in question_and_answers:
-                text_to_embed = f"Subject: {entity.subject}\nQuestion: {entity.question}\nAnswer: {entity.answer}"
-
-                embedding = self.embedding_model.embed_query(text_to_embed)
-                self.logger.info(
-                    f"Generated embedding for Q&A: question={entity.question}, embedding={embedding[:5]}..."  # Log only the first 5 dimensions for brevity
-                )
-
-                documents.append(
-                    {
-                        "subject": entity.subject,
-                        "question": entity.question,
-                        "answer": entity.answer,
-                        "embedding": embedding,
-                    }
-                )
-
-            self.collection.insert_many(documents)
-
-            self.logger.info(f"Documents saved in DB")
-        except PyMongoError as e:
-            self.logger.error(
-                f"Failed to create question and answer in DB. PyMongoError: {e}"
-            )
-            raise
 
     def search_similar_questions(self, customer_question: str, limit: int = 3):
         try:
@@ -97,4 +56,45 @@ class QuestionStorage:
             return filtered
         except PyMongoError as e:
             self.logger.error(f"Vector search failed: {e}")
+            raise
+
+    def create_question_and_answer(
+        self, question_and_answers: List[QuestionAndAnswer]
+    ) -> str:
+        try:
+            self.logger.info(
+                f"Generating embeddings and in DB: Q&A={question_and_answers}"
+            )
+
+            self.logger.info(f"Generating test embedding")
+
+            test = self.embedding_model.embed_query("hello world")
+            self.logger.info(f"Generated test embedding: {test[:5]}...")
+
+            documents = []
+
+            for entity in question_and_answers:
+                text_to_embed = f"Subject: {entity.subject}\nQuestion: {entity.question}\nAnswer: {entity.answer}"
+
+                embedding = self.embedding_model.embed_query(text_to_embed)
+                self.logger.info(
+                    f"Generated embedding for Q&A: question={entity.question}, embedding={embedding[:5]}..."
+                )
+
+                documents.append(
+                    {
+                        "subject": entity.subject,
+                        "question": entity.question,
+                        "answer": entity.answer,
+                        "embedding": embedding,
+                    }
+                )
+
+            self.collection.insert_many(documents)
+
+            self.logger.info(f"Documents saved in DB")
+        except PyMongoError as e:
+            self.logger.error(
+                f"Failed to create question and answer in DB. PyMongoError: {e}"
+            )
             raise
