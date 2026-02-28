@@ -12,13 +12,12 @@ class QuestionStorage:
     def __init__(self, db_connection: MongoClient):
         self.logger = logging.getLogger(__name__)
         self.db_connection: MongoClient = db_connection
-        self.collection: database.Database = self.db_connection.get_collection(
-            "question_and_answer"
-        )
+        self.collection = self.db_connection.get_collection("question_and_answer")
         self.embedding_model = OllamaEmbeddings(
             model="nomic-embed-text",
             base_url=os.getenv("OLLAMA_BASE_URL"),
         )
+        self.min_score = 0.80
 
     def create_question_and_answer(
         self, question_and_answers: List[QuestionAndAnswer]
@@ -27,6 +26,7 @@ class QuestionStorage:
             self.logger.info(
                 f"Generating embeddings and in DB: Q&A={question_and_answers}"
             )
+
             self.logger.info(f"Generating test embedding")
 
             test = self.embedding_model.embed_query("hello world")
@@ -60,7 +60,7 @@ class QuestionStorage:
             )
             raise
 
-    def search_similar_questions(self, customer_question: str, limit: int = 5):
+    def search_similar_questions(self, customer_question: str, limit: int = 3):
         try:
             self.logger.info(f"Searching similar questions for: {customer_question}")
 
@@ -69,10 +69,10 @@ class QuestionStorage:
             pipeline = [
                 {
                     "$vectorSearch": {
-                        "index": "qa_vector_index",  # nome do índice vetorial
+                        "index": "qa_vector_index",
                         "path": "embedding",
                         "queryVector": query_embedding,
-                        "numCandidates": 100,
+                        "numCandidates": 30,
                         "limit": limit,
                     }
                 },
@@ -85,14 +85,16 @@ class QuestionStorage:
                         "score": {"$meta": "vectorSearchScore"},
                     }
                 },
+                {"$match": {"score": {"$gte": self.min_score}}},
             ]
 
             results = list(self.collection.aggregate(pipeline))
 
-            self.logger.info(f"Found {len(results)} similar questions")
+            filtered = [r for r in results if r["score"] >= self.min_score]
 
-            return results
+            self.logger.info(f"Found {len(filtered)} similar questions: {filtered}")
 
+            return filtered
         except PyMongoError as e:
             self.logger.error(f"Vector search failed: {e}")
             raise

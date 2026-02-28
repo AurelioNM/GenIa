@@ -106,16 +106,12 @@ services:
       - gen-ia-network
 
   order-db:
-    image: mongodb/mongodb-atlas-local:latest
+    image: mongodb/mongodb-atlas-local
     container_name: order-db
     ports:
       - "27020:27017"
-    environment:
-      MONGODB_INITDB_ROOT_USERNAME: order
-      MONGODB_INITDB_ROOT_PASSWORD: order
     volumes:
       - order_db_vol:/data/db
-      - order_configdb_vol:/data/configdb
     networks:
       - gen-ia-network
 
@@ -197,7 +193,6 @@ volumes:
   customer_db_vol: {}
   weather_db_vol: {}
   order_db_vol: {}
-  order_configdb_vol: {}
   ollama_vol: {}
 
 networks:

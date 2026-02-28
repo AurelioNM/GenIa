@@ -16,7 +16,7 @@ class FileService:
 
     def embed_file(self, file_path: str):
         self.question_storage.search_similar_questions(
-            "Which films were directed by Quentin Tarantino?"
+            "In what year was Pulp Fiction released?"
         )
         # self.logger.info(f"Embedding file: path={file_path}")
 
