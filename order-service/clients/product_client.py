@@ -35,7 +35,7 @@ class ProductClient:
         try:
             self.logger.info(f"Getting products by category={product_category}")
 
-            url = f"{os.getenv('PRODUCT_BASE_URL')}/v1/products/category/{product_category}"
+            url = f"{os.getenv('PRODUCT_BASE_URL')}/v1/products/categories/{product_category}"
 
             response = self.client_http.get(url)
 

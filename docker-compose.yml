@@ -118,6 +118,14 @@ services:
     networks:
       - gen-ia-network
 
+  order-cache:
+    image: redis
+    container_name: order-cache
+    ports:
+      - "6389:6379"
+    networks:
+      - gen-ia-network
+
   order-llm-ollama:
     image: ollama/ollama:latest
     container_name: order-llm-ollama

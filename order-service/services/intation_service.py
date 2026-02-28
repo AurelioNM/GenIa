@@ -14,39 +14,66 @@ class IntationService:
         self.logger = logging.getLogger(__name__)
         self.llm_client = llm_client
 
-    def get_intation(self, input: str) -> InteractionOutput:
+    def get_intation(self, input: str, history: List[dict] = None) -> InteractionOutput:
         self.logger.info("Getting chat intation")
 
         # INPUT
         intation_template = """\
-        For the following customer interaction, extract the following information in a JSON format:
+        You are a helpful, proactive conversational assistant for an e-commerce platform.
 
-        intation: What is the intation of the client based ONLY on this list of intations in uppercase:
-        - PURCHASE_PRODUCT (customer wants to purchase one or more products)
-        - SUGGEST_PRODUCT_BASED_ON_CATEGORY (customer wants suggestions of products to buy based on a specific category)
-        - SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY (customer wants suggestions of products to buy based on his/her purchase history)
-        - SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER (customer wants to go out based on the weather)
-        - UNKNOWN (if you cannot clearly identify the intation)
+        Your job has TWO responsibilities:
+        1) Identify the customer's intention.
+        2) Always respond helpfully and continue the conversation naturally.
 
-        output: Your response to the customer input.
-        - If the intation is PURCHASE_PRODUCT, tell the customer the purchase was successfully processed.
-        - Otherwise, respond naturally and helpfully according to the intation.
+        IMPORTANT:
+        - Even if the intention is UNKNOWN, you MUST continue the conversation.
+        - NEVER say you cannot identify the intention.
+        - NEVER ask the user to rephrase unless absolutely necessary.
+        - Your main goal is to help the customer move forward.
+
+        For the following customer interaction, extract the information in JSON format:
+
+        intation:
+        Classify the customer intention using ONLY one of these values:
+        - PURCHASE_PRODUCT
+        - SUGGEST_PRODUCT_BASED_ON_CATEGORY
+        - SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
+        - SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
+        - UNKNOWN
+
+        Use UNKNOWN only if no category clearly applies.
+        UNKNOWN does NOT mean the conversation stops.
+
+        output:
+        Your response to the customer.
+        - If intation is PURCHASE_PRODUCT → confirm the purchase was successfully processed.
+        - Otherwise → respond naturally, helpfully, and conversationally.
+        - Ask clarifying questions if helpful.
+        - Keep the response under 80 words.
+        - Sound human and friendly.
+        - Continue the interaction.
 
         category:
-        - If the intation is SUGGEST_PRODUCT_BASED_ON_CATEGORY, extract in uppercase the category mentioned.
-        - If the intation is NOT SUGGEST_PRODUCT_BASED_ON_CATEGORY, this field must be null.
+        - If intation is SUGGEST_PRODUCT_BASED_ON_CATEGORY → extract in UPPERCASE the category mentioned.
+        - Otherwise → null.
 
         products:
-        - If the intation is PURCHASE_PRODUCT, extract ALL products mentioned.
-        - Return a list of objects.
-        - Each object must contain:
-            - name: product name as string
-            - quantity: integer quantity requested
-        - If quantity is not explicitly mentioned, assume quantity = 1.
-        - If the intation is NOT PURCHASE_PRODUCT, this field must be null.
+        - If intation is PURCHASE_PRODUCT:
+            - Extract ALL mentioned products.
+            - Return a list of objects.
+            - Each object must contain:
+                - name: string
+                - quantity: integer
+            - If quantity is not mentioned, assume quantity = 1.
+        - Otherwise → null.
+
+        Use chat history for context when determining intention and crafting the response.
 
         Customer text:
         {text}
+
+        Chat history:
+        {history}
 
         {format_instructions}
         """
@@ -57,6 +84,7 @@ class IntationService:
 
         prompt_message = prompt_template.format_messages(
             text=input,
+            history=history,
             format_instructions=parser.get_format_instructions(),
         )
 

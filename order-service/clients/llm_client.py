@@ -26,7 +26,7 @@ class LlmClient:
         try:
             self.logger.info(f"Generating LLM output for prompt={prompt}")
 
-            response = self.llm_groq.invoke([HumanMessage(content=prompt)])
+            response = self.llm_ollama.invoke([HumanMessage(content=prompt)])
 
             content = response.content
 

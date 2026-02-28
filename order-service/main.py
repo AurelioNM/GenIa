@@ -11,6 +11,7 @@ from clients.customer_client import CustomerClient
 from clients.product_client import ProductClient
 from clients.weather_client import WeatherClient
 from configs.db_conn import get_database_connection
+from configs.cache_conn import get_cache_connection
 from routes.interaction_router import router as interaction_router
 from routes.chat_studies_router import router as chat_studies_router
 from routes.order_router import router as order_router
@@ -20,7 +21,9 @@ from services.interaction_service import InteractionService
 from services.intation_service import IntationService
 from services.product_service import ProductService
 from services.weather_service import WeatherService
+from services.cache_service import CacheService
 from storage.order_storage import OrderStorage
+from storage.cache_storage import CacheStorage
 
 
 logger = logging.getLogger(__name__)
@@ -29,6 +32,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
+    cache_connection = get_cache_connection()
 
     # product
     product_client = ProductClient(httpx)
@@ -49,6 +53,10 @@ async def lifespan(app: FastAPI):
         product_client=product_client,
     )
 
+    # cache
+    cache_storage = CacheStorage(cache_connection=cache_connection)
+    cache_service = CacheService(cache_storage=cache_storage)
+
     # llm
     llm_ollama = ChatOllama(
         model="llama3",
@@ -67,6 +75,7 @@ async def lifespan(app: FastAPI):
         order_service=order_service,
         product_service=product_service,
         weather_service=weather_service,
+        cache_service=cache_service,
     )
 
     # studies

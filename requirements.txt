@@ -17,3 +17,4 @@ langchain-core
 langchain-ollama
 pymongo
 langchain-groq
+redis

@@ -8,6 +8,7 @@ from models.weather import Weather
 from services.intation_service import IntationService
 from services.order_service import OrderService
 from services.product_service import ProductService
+from services.cache_service import CacheService
 from services.weather_service import WeatherService
 
 
@@ -18,85 +19,112 @@ class InteractionService:
         order_service: OrderService,
         product_service: ProductService,
         weather_service: WeatherService,
+        cache_service: CacheService,
     ):
         self.logger = logging.getLogger(__name__)
         self.intation_service = intation_service
         self.order_service = order_service
         self.product_service = product_service
         self.weather_service = weather_service
+        self.cache_service = cache_service
 
     def get_chat_interaction(
-        self, interaction_request: InteractionRequest
+        self, interaction_request: InteractionRequest, session_id: str
     ) -> InteractionOutput:
         self.logger.info("Getting chat interaction")
 
+        history = self.cache_service.get_chat_history(session_id)
+
         output: InteractionOutput = self.intation_service.get_intation(
-            interaction_request.input
+            interaction_request.input, history
         )
 
         if output.intation == IntationEnum.PURCHASE_PRODUCT and output.products != None:
-            self.logger.info("Start flow on intation PURCHASE_PRODUCT")
-            order_request = OrderRequest(
-                customer_email=interaction_request.customer_email,
-                products=output.products,
-            )
-            self.order_service.create_order(order_request)
+            self._execute_purchase_flow(interaction_request, output)
 
         if output.intation == IntationEnum.SUGGEST_PRODUCT_BASED_ON_CATEGORY:
-            self.logger.info("Start flow on intation SUGGEST_PRODUCT_BASED_ON_CATEGORY")
-            products: List[ProductSummary] = (
-                self.product_service.get_products_by_category(output.category)
-            )
-
-            product_lines = "\n".join(
-                f"- {product.name}: ${product.price:.2f}" for product in products
-            )
-
-            output.output = f"""Here are some great options based on the category {output.category}:
-
-            {product_lines}
-
-            Let me know if you'd like to purchase any of them!"""
+            self._execute_product_suggestion_on_category_flow(output)
 
         if output.intation == IntationEnum.SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY:
-            self.logger.info(
-                "Start flow on intation SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY"
+            self._execute_product_suggestion_on_order_history_flow(
+                interaction_request, output
             )
-            category: str = self.order_service.get_most_purchased_category(
-                interaction_request.customer_email
-            )
-
-            products: List[ProductSummary] = (
-                self.product_service.get_products_by_category(category)
-            )
-
-            product_lines = "\n".join(
-                f"- {product.name}: ${product.price:.2f}" for product in products
-            )
-
-            output.category = category
-            output.output = f"""Here are some great options based on your \
-            most purchased category {category}:
-
-            {product_lines}
-
-            Let me know if you'd like to purchase any of them!"""
 
         if output.intation == IntationEnum.SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER:
-            self.logger.info(
-                "Start flow on intation SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER"
-            )
-            forecast: List[Weather] = self.weather_service.get_weather_forecast()
-            products: List[ProductSummary] = (
-                self.product_service.get_products_by_category("WEATHER")
-            )
+            self._execute_day_suggestion_on_weather_flow(interaction_request, output)
 
-            output.output = self.intation_service.process_weather_intation(
-                interaction_request.input, forecast, products
-            )
-
-        if output.intation == IntationEnum.UNKNOWN:
-            self.logger.info("Start flow on intation UNKNOWN")
-            output.output = "I didn't understand the request. Can you be more specific?"
+        self.cache_service.save_chat_history(
+            session_id, history, interaction_request, output
+        )
 
         return output
+
+    def _execute_purchase_flow(
+        self, input: InteractionRequest, output: InteractionOutput
+    ):
+        self.logger.info("Executing flow for intation PURCHASE_PRODUCT")
+        order_request = OrderRequest(
+            customer_email=input.customer_email,
+            products=output.products,
+        )
+        self.order_service.create_order(order_request)
+
+    def _execute_product_suggestion_on_category_flow(self, output: InteractionOutput):
+        self.logger.info(
+            "Executing flow for intation SUGGEST_PRODUCT_BASED_ON_CATEGORY"
+        )
+        products: List[ProductSummary] = self.product_service.get_products_by_category(
+            output.category
+        )
+
+        product_lines = "\n".join(
+            f"- {product.name}: ${product.price:.2f}" for product in products
+        )
+
+        output.output = f"""Here are some great options based on the category {output.category}:
+
+        {product_lines}
+
+        Let me know if you'd like to purchase any of them!"""
+
+    def _execute_product_suggestion_on_order_history_flow(
+        self, input: InteractionRequest, output: InteractionOutput
+    ):
+        self.logger.info(
+            "Executing flow for intation SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY"
+        )
+        category: str = self.order_service.get_most_purchased_category(
+            input.customer_email
+        )
+
+        products: List[ProductSummary] = self.product_service.get_products_by_category(
+            category
+        )
+
+        product_lines = "\n".join(
+            f"- {product.name}: ${product.price:.2f}" for product in products
+        )
+
+        output.category = category
+        output.output = f"""Here are some great options based on your \
+        most purchased category {category}:
+
+        {product_lines}
+
+        Let me know if you'd like to purchase any of them!"""
+
+    def _execute_day_suggestion_on_weather_flow(
+        self, input: InteractionRequest, output: InteractionOutput
+    ):
+        self.logger.info(
+            "Executing flow for intation SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER"
+        )
+        forecast: List[Weather] = self.weather_service.get_weather_forecast()
+        products: List[ProductSummary] = self.product_service.get_products_by_category(
+            "WEATHER"
+        )
+
+        output.category = "WEATHER"
+        output.output = self.intation_service.process_weather_intation(
+            input.input, forecast, products
+        )

@@ -1,7 +1,7 @@
 import logging
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Header, Request, status
 
 from models.interaction import InteractionOutput, InteractionRequest
 from services.interaction_service import InteractionService
@@ -23,10 +23,18 @@ ServiceDep = Annotated[InteractionService, Depends(get_interaction_service)]
     status_code=status.HTTP_200_OK,
     response_model=InteractionOutput,
 )
-def get_interaction(interaction_request: InteractionRequest, service: ServiceDep):
+def get_interaction(
+    interaction_request: InteractionRequest,
+    service: ServiceDep,
+    session_id: str = Header(..., alias="session-id"),
+):
     try:
-        logger.info(f"Started request getInteractionV1: body={interaction_request }")
-        response: InteractionOutput = service.get_chat_interaction(interaction_request)
+        logger.info(
+            f"Started request getInteractionV1: session_id={session_id}, body={interaction_request }"
+        )
+        response: InteractionOutput = service.get_chat_interaction(
+            interaction_request, session_id
+        )
 
         logger.info(
             f"Finished request getInteractionV1: response={response.model_dump()}"
