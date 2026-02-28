@@ -28,6 +28,7 @@ class QuestionStorage:
                 f"Generating embeddings and in DB: Q&A={question_and_answers}"
             )
             self.logger.info(f"Generating test embedding")
+
             test = self.embedding_model.embed_query("hello world")
             self.logger.info(f"Generated test embedding: {test[:5]}...")
 
@@ -57,4 +58,41 @@ class QuestionStorage:
             self.logger.error(
                 f"Failed to create question and answer in DB. PyMongoError: {e}"
             )
+            raise
+
+    def search_similar_questions(self, customer_question: str, limit: int = 5):
+        try:
+            self.logger.info(f"Searching similar questions for: {customer_question}")
+
+            query_embedding = self.embedding_model.embed_query(customer_question)
+
+            pipeline = [
+                {
+                    "$vectorSearch": {
+                        "index": "qa_vector_index",  # nome do índice vetorial
+                        "path": "embedding",
+                        "queryVector": query_embedding,
+                        "numCandidates": 100,
+                        "limit": limit,
+                    }
+                },
+                {
+                    "$project": {
+                        "_id": 0,
+                        "subject": 1,
+                        "question": 1,
+                        "answer": 1,
+                        "score": {"$meta": "vectorSearchScore"},
+                    }
+                },
+            ]
+
+            results = list(self.collection.aggregate(pipeline))
+
+            self.logger.info(f"Found {len(results)} similar questions")
+
+            return results
+
+        except PyMongoError as e:
+            self.logger.error(f"Vector search failed: {e}")
             raise

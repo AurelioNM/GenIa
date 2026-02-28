@@ -15,19 +15,22 @@ class FileService:
         self.question_storage = question_storage
 
     def embed_file(self, file_path: str):
-        self.logger.info(f"Embedding file: path={file_path}")
+        self.question_storage.search_similar_questions(
+            "Which films were directed by Quentin Tarantino?"
+        )
+        # self.logger.info(f"Embedding file: path={file_path}")
 
-        df = pd.read_csv(file_path)
+        # df = pd.read_csv(file_path)
 
-        entities: List[QuestionAndAnswer] = []
+        # entities: List[QuestionAndAnswer] = []
 
-        for _, row in df.iterrows():
-            entities.append(
-                QuestionAndAnswer(
-                    subject="TARANTINO",
-                    question=row["question"],
-                    answer=row["answer"],
-                )
-            )
+        # for _, row in df.iterrows():
+        #     entities.append(
+        #         QuestionAndAnswer(
+        #             subject="TARANTINO",
+        #             question=row["question"],
+        #             answer=row["answer"],
+        #         )
+        #     )
 
-        self.question_storage.create_question_and_answer(entities)
+        # self.question_storage.create_question_and_answer(entities)
