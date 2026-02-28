@@ -15,15 +15,18 @@ from configs.cache_conn import get_cache_connection
 from routes.interaction_router import router as interaction_router
 from routes.chat_studies_router import router as chat_studies_router
 from routes.order_router import router as order_router
+from routes.file_router import router as file_router
 from services.chat_studies_service import ChatStudiesService
 from services.order_service import OrderService
 from services.interaction_service import InteractionService
+from services.file_service import FileService
 from services.intation_service import IntationService
 from services.product_service import ProductService
 from services.weather_service import WeatherService
 from services.cache_service import CacheService
 from storage.order_storage import OrderStorage
 from storage.cache_storage import CacheStorage
+from storage.question_storage import QuestionStorage
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +56,10 @@ async def lifespan(app: FastAPI):
         product_client=product_client,
     )
 
+    # file
+    question_storage = QuestionStorage(db_connection)
+    file_service = FileService(question_storage=question_storage)
+
     # cache
     cache_storage = CacheStorage(cache_connection=cache_connection)
     cache_service = CacheService(cache_storage=cache_storage)
@@ -64,7 +71,7 @@ async def lifespan(app: FastAPI):
         base_url=os.getenv("OLLAMA_BASE_URL"),
     )
 
-    llm_groq = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0.7)
+    llm_groq = ChatGroq(model_name="openai/gpt-oss-120b", temperature=0.7)
 
     llm_client = LlmClient(llm_ollama=llm_ollama, llm_groq=llm_groq)
     intation_service = IntationService(llm_client=llm_client)
@@ -85,6 +92,7 @@ async def lifespan(app: FastAPI):
         "order_service": order_service,
         "interaction_service": interaction_service,
         "chat_studies_service": chat_studies_service,
+        "file_service": file_service,
     }
     logger.info("Shutdown order-service")
 
@@ -94,3 +102,4 @@ app = FastAPI(lifespan=lifespan, title="Order Service")
 app.include_router(order_router)
 app.include_router(interaction_router)
 app.include_router(chat_studies_router)
+app.include_router(file_router)

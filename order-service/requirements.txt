@@ -14,5 +14,7 @@ langchain-classic
 langchain-core
 langchain-ollama
 langchain-groq
+langchain-openai
 pymongo
 redis
+pandas

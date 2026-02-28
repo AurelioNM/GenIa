@@ -118,6 +118,20 @@ services:
     networks:
       - gen-ia-network
 
+  order-db-client:
+    image: mongo-express
+    container_name: order-db-client
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://order:order@order-db:27017/admin
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      - order-db
+    networks:
+      - gen-ia-network
+
   order-cache:
     image: redis
     container_name: order-cache
