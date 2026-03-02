@@ -53,7 +53,7 @@ class QuestionStorage:
 
             return results
         except PyMongoError as e:
-            self.logger.error(f"Vector search failed: {e}")
+            self.logger.error(f"Searching similar questions failed: {e}")
             raise
 
     def create_question_and_answer(

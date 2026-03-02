@@ -4,10 +4,10 @@ from langchain_core.tools import StructuredTool
 
 from services.order_service import OrderService
 from models.order_request import OrderRequest, ProductRequest
-from models.interaction import PurchaseProductToolInput
+from models.tool_input import PurchaseProductToolInput
 
 
-class PurchaseTool:
+class ProcessPurchaseTool:
     def __init__(self, order_service: OrderService):
         self.logger = logging.getLogger(__name__)
         self.order_service = order_service

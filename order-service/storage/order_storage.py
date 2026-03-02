@@ -30,7 +30,13 @@ class OrderStorage:
 
             orders = [Order(**order) for order in result]
 
-            return OrdersPage(orders=orders)
+            orders_page = OrdersPage(orders=orders)
+
+            self.logger.info(
+                f"Successfully found orders in DB by customer email. orders_page={orders_page}"
+            )
+
+            return orders_page
 
         except PyMongoError as e:
             self.logger.error(

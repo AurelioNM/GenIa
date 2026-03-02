@@ -6,7 +6,11 @@ from langchain_classic.prompts import ChatPromptTemplate
 from langchain_core.prompts import MessagesPlaceholder
 from langchain_groq import ChatGroq
 from langchain_ollama import ChatOllama
-from tools.purchase_tool import PurchaseTool
+from tools.process_purchase_tool import ProcessPurchaseTool
+from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
+from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
+from tools.answer_question_tool import GetQuestionAnswerBaseTool
+from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
 from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 
 
@@ -15,7 +19,11 @@ class LlmClient:
         self,
         llm_ollama: ChatOllama,
         llm_groq: ChatGroq,
-        purchase_tool: PurchaseTool,
+        process_purchase_tool: ProcessPurchaseTool,
+        suggest_product_on_category_tool: SuggestProductOnCategoryTool,
+        suggest_product_on_history_tool: SuggestProductOnHistoryTool,
+        suggest_day_and_product_on_weather_tool: SuggestDayAndProductOnWeatherTool,
+        get_question_answer_base_tool: GetQuestionAnswerBaseTool,
     ):
         self.logger = logging.getLogger(__name__)
         self.llm_ollama = llm_ollama
@@ -28,7 +36,13 @@ class LlmClient:
                 MessagesPlaceholder("agent_scratchpad"),
             ]
         )
-        tools = [purchase_tool.get_tool()]
+        tools = [
+            process_purchase_tool.get_tool(),
+            suggest_product_on_category_tool.get_tool(),
+            suggest_product_on_history_tool.get_tool(),
+            suggest_day_and_product_on_weather_tool.get_tool(),
+            get_question_answer_base_tool.get_tool(),
+        ]
         agent = create_tool_calling_agent(self.llm_groq, tools, prompt)
         self.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 

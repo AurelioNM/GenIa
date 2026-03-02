@@ -28,7 +28,11 @@ from services.cache_service import CacheService
 from storage.order_storage import OrderStorage
 from storage.cache_storage import CacheStorage
 from storage.question_storage import QuestionStorage
-from tools.purchase_tool import PurchaseTool
+from tools.process_purchase_tool import ProcessPurchaseTool
+from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
+from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
+from tools.answer_question_tool import GetQuestionAnswerBaseTool
+from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
 
 
 logger = logging.getLogger(__name__)
@@ -67,7 +71,19 @@ async def lifespan(app: FastAPI):
     cache_service = CacheService(cache_storage=cache_storage)
 
     # tools
-    purchase_tool = PurchaseTool(order_service=order_service)
+    process_purchase_tool = ProcessPurchaseTool(order_service=order_service)
+    suggest_product_on_category_tool = SuggestProductOnCategoryTool(
+        product_service=product_service
+    )
+    suggest_product_on_history_tool = SuggestProductOnHistoryTool(
+        order_service=order_service, product_service=product_service
+    )
+    suggest_day_and_product_on_weather_tool = SuggestDayAndProductOnWeatherTool(
+        weather_service=weather_service, product_service=product_service
+    )
+    get_question_answer_base_tool = GetQuestionAnswerBaseTool(
+        question_storage=question_storage
+    )
 
     # llm
     llm_ollama = ChatOllama(
@@ -79,7 +95,13 @@ async def lifespan(app: FastAPI):
     llm_groq = ChatGroq(model_name="openai/gpt-oss-120b", temperature=0.7)
 
     llm_client = LlmClient(
-        llm_ollama=llm_ollama, llm_groq=llm_groq, purchase_tool=purchase_tool
+        llm_ollama=llm_ollama,
+        llm_groq=llm_groq,
+        process_purchase_tool=process_purchase_tool,
+        suggest_product_on_category_tool=suggest_product_on_category_tool,
+        suggest_product_on_history_tool=suggest_product_on_history_tool,
+        suggest_day_and_product_on_weather_tool=suggest_day_and_product_on_weather_tool,
+        get_question_answer_base_tool=get_question_answer_base_tool,
     )
     intation_service = IntationService(llm_client=llm_client)
 

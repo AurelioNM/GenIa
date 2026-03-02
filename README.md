@@ -4,10 +4,10 @@
 - gen-ia
     - [ ] implementar guardrails
     - transformar em tools os seguintes fluxos
-        - [ ] processar compra
+        - [X] processar compra
         - [ ] sugerir produto baseado em categoria
         - [ ] sugerir produto baseado em historico de compras
-        - [ ] sugerir produto baseado em historico de compras
+        - [ ] sugestao baseada no clima
         - [ ] reponder Q&A do tarantino
     - [ ] implementar MCP
 - Observability
