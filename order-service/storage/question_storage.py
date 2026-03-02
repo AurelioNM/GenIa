@@ -49,11 +49,9 @@ class QuestionStorage:
 
             results = list(self.collection.aggregate(pipeline))
 
-            filtered = [r for r in results if r["score"] >= self.min_score]
+            self.logger.info(f"Found {len(results)} similar questions: {results}")
 
-            self.logger.info(f"Found {len(filtered)} similar questions: {filtered}")
-
-            return filtered
+            return results
         except PyMongoError as e:
             self.logger.error(f"Vector search failed: {e}")
             raise

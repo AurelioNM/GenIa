@@ -1,6 +1,6 @@
 import logging
 
-from clients.llm_client import LlmClient
+from clients.studies_llm_client import StudiesLlmClient
 from models.chat_studies import (
     ProductReviewOutput,
     ChatStudiesInput,
@@ -11,7 +11,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 
 
 class ChatStudiesService:
-    def __init__(self, llm_client: LlmClient):
+    def __init__(self, llm_client: StudiesLlmClient):
         self.logger = logging.getLogger(__name__)
         self.llm_client = llm_client
 

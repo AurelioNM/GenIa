@@ -7,6 +7,7 @@ import httpx
 from langchain_groq import ChatGroq
 from langchain_ollama import ChatOllama
 from clients.llm_client import LlmClient
+from clients.studies_llm_client import StudiesLlmClient
 from clients.customer_client import CustomerClient
 from clients.product_client import ProductClient
 from clients.weather_client import WeatherClient
@@ -27,6 +28,7 @@ from services.cache_service import CacheService
 from storage.order_storage import OrderStorage
 from storage.cache_storage import CacheStorage
 from storage.question_storage import QuestionStorage
+from tools.purchase_tool import PurchaseTool
 
 
 logger = logging.getLogger(__name__)
@@ -64,6 +66,9 @@ async def lifespan(app: FastAPI):
     cache_storage = CacheStorage(cache_connection=cache_connection)
     cache_service = CacheService(cache_storage=cache_storage)
 
+    # tools
+    purchase_tool = PurchaseTool(order_service=order_service)
+
     # llm
     llm_ollama = ChatOllama(
         model="llama3",
@@ -73,7 +78,9 @@ async def lifespan(app: FastAPI):
 
     llm_groq = ChatGroq(model_name="openai/gpt-oss-120b", temperature=0.7)
 
-    llm_client = LlmClient(llm_ollama=llm_ollama, llm_groq=llm_groq)
+    llm_client = LlmClient(
+        llm_ollama=llm_ollama, llm_groq=llm_groq, purchase_tool=purchase_tool
+    )
     intation_service = IntationService(llm_client=llm_client)
 
     # interaction
@@ -87,7 +94,8 @@ async def lifespan(app: FastAPI):
     )
 
     # studies
-    chat_studies_service = ChatStudiesService(llm_client=llm_client)
+    studies_llm_client = StudiesLlmClient(llm_ollama=llm_ollama, llm_groq=llm_groq)
+    chat_studies_service = ChatStudiesService(llm_client=studies_llm_client)
 
     yield {
         "order_service": order_service,

@@ -14,13 +14,7 @@ IMPORTANT:
 For the following customer interaction, extract the information in JSON format:
 
 intation:
-Classify the customer intention using ONLY one of these values:
-- PURCHASE_PRODUCT
-- SUGGEST_PRODUCT_BASED_ON_CATEGORY
-- SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
-- SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
-- TARANTINO_QUESTION
-- UNKNOWN
+Classify the customer intention using ONLY one of IntationEnum values.
 
 Use UNKNOWN only if no category clearly applies.
 UNKNOWN does NOT mean the conversation stops.
@@ -33,6 +27,9 @@ Your response to the customer.
 - Keep the response under 80 words.
 - Sound human and friendly.
 - Continue the interaction.
+
+customer_email:
+The value of {customer_email}.
 
 category:
 - If intation is SUGGEST_PRODUCT_BASED_ON_CATEGORY → extract in UPPERCASE the category mentioned.

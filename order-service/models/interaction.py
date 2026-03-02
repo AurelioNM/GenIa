@@ -17,6 +17,7 @@ class IntationEnum(str, Enum):
 class InteractionOutput(BaseModel):
     output: str = Field(description="LLM response to the customer input")
     intation: IntationEnum = Field(description="Intation of interaction")
+    customer_email: str = Field(description="Customer email")
     category: str | None = Field(default=None, description="Product category")
     products: List[ProductRequest] | None = Field(
         default=None, description="List of products"

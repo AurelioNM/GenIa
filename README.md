@@ -1,34 +1,15 @@
 # Generative IA studies
 
 ### To Do List
-- costumer-service
-    - [X] criar service
-    - [X] api get customer by email
-- weather-service
-    - [X] separar service
-    - [ ] converter cron api em job
-    - [ ] processamento do job via sqs
-- product-service
-    - [X] separar service
-    - [X] api get products by names
-    - [X] api get products by category
-    - [ ] enum category
-- order-service
-    - [X] separar parte da IA nele
-    - [X] config mongo-db
-    - [X] api para processar compra de produtos
-    - [X] api para pegar compras por customer email
-    - interacao com IA
-        - [X] api para chat direto com cliente
-        - [X] Implementar parte que interpreta a intencao do usuario
-        - [X] se o cliente tiver intencao de comprar, processar e gerar a compra 
-        - [X] estrutura para salvar historico de chat por sessao
-            - [X] estrutura para usar o historico do chat na interacao
-        - [X] sugerir melhores dias pra sair baseado na previsao do tempo e na preferencia do cliente
-            - [X] sugerir produtos categoria WEATHER baseado no clima
-        - [X] sugerir produtos de X categoria
-        - [X] sugerir produtos baseado no historico de compras
-        - [X] usar paginacao para perguntar pro cliente se ele quer ver mais produtos
+- gen-ia
+    - [ ] implementar guardrails
+    - transformar em tools os seguintes fluxos
+        - [ ] processar compra
+        - [ ] sugerir produto baseado em categoria
+        - [ ] sugerir produto baseado em historico de compras
+        - [ ] sugerir produto baseado em historico de compras
+        - [ ] reponder Q&A do tarantino
+    - [ ] implementar MCP
 - Observability
     - [ ] gerar metricas
     - [ ] config prometheus
@@ -61,7 +42,7 @@ SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
 I want to go for a walk on a rainy day
 
 TARANTINO_QUESTION
-Did Tarantino won the oscar?
+Did Tarantino won the oscar? If yes, with movies?
 
 UNKNOWN
 Tell me how to do backflips

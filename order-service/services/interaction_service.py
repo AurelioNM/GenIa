@@ -39,7 +39,7 @@ class InteractionService:
         history = self.cache_service.get_chat_history(session_id)
 
         output: InteractionOutput = self.intation_service.get_intation(
-            interaction_request.input, history
+            interaction_request, history
         )
 
         if output.intation == IntationEnum.PURCHASE_PRODUCT and output.products != None:
