@@ -2,7 +2,12 @@ import logging
 from typing import List
 
 from models.order_request import OrderRequest
-from models.interaction import InteractionOutput, InteractionRequest, IntationEnum
+from models.interaction import (
+    InteractionOutput,
+    InteractionOutputV2,
+    InteractionRequest,
+    IntationEnum,
+)
 from models.product import ProductSummary
 from models.weather import Weather
 from services.intation_service import IntationService
@@ -58,6 +63,23 @@ class InteractionService:
 
         if output.intation == IntationEnum.TARANTINO_QUESTION:
             self._execute_tarantino_question_flow(interaction_request, output)
+
+        self.cache_service.save_chat_history(
+            session_id, history, interaction_request, output
+        )
+
+        return output
+
+    async def get_chat_interaction_v2(
+        self, interaction_request: InteractionRequest, session_id: str
+    ) -> InteractionOutputV2:
+        self.logger.info("Getting chat interaction")
+
+        history = self.cache_service.get_chat_history(session_id)
+
+        output: InteractionOutputV2 = await self.intation_service.get_intation_v2(
+            interaction_request, history
+        )
 
         self.cache_service.save_chat_history(
             session_id, history, interaction_request, output

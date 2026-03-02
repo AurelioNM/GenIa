@@ -2,12 +2,16 @@ import logging
 from typing import List
 
 from clients.llm_client import LlmClient
-from models.interaction import InteractionOutput, InteractionRequest
+from models.interaction import (
+    InteractionOutput,
+    InteractionOutputV2,
+    InteractionRequest,
+)
 from models.product import ProductSummary
 from models.weather import Weather
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import PydanticOutputParser
-from prompts.intation_prompt import intation_template
+from prompts.intation_prompt import intation_template, intation_template_v2
 from prompts.weather_prompt import weather_template
 from prompts.question_prompt import question_template
 
@@ -36,6 +40,25 @@ class IntationService:
 
         parsed_output = parser.parse(output)
         self.logger.info(f"Intation response: {parsed_output.model_dump()}")
+
+        return parsed_output
+
+    async def get_intation_v2(
+        self, input: InteractionRequest, history: List[dict] = None
+    ) -> InteractionOutputV2:
+        self.logger.info("Getting chat intation v2")
+        prompt_template = ChatPromptTemplate.from_template(intation_template_v2)
+
+        prompt_message = prompt_template.format_messages(
+            text=input.input,
+            customer_email=input.customer_email,
+            history=history,
+        )
+
+        output = await self.llm_client.invoke_with_tools(prompt_message)
+
+        parsed_output = InteractionOutputV2(output=output)
+        self.logger.info(f"Intation v2 response: {parsed_output.model_dump()}")
 
         return parsed_output
 

@@ -27,3 +27,12 @@ class InteractionOutput(BaseModel):
 class InteractionRequest(BaseModel):
     customer_email: str = Field(description="Customer email")
     input: str = Field(description="Customer input to chat")
+
+
+class InteractionOutputV2(BaseModel):
+    output: str = Field(description="LLM response to the customer input")
+
+
+class PurchaseProductToolInput(BaseModel):
+    email: str = Field(description="Customer email")
+    products: List[ProductRequest] = Field(description="List of products")

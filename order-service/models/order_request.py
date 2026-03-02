@@ -1,11 +1,11 @@
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ProductRequest(BaseModel):
-    name: str
-    quantity: int
+    name: str = Field(description="Product name")
+    quantity: int = Field(description="Product quantity")
 
 
 class OrderRequest(BaseModel):
