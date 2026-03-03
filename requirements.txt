@@ -20,3 +20,5 @@ pymongo
 langchain-groq
 redis
 pandas
+robotframework
+robotframework-requests

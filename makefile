@@ -19,6 +19,9 @@ setup:
 update-deps:
 	make down && docker-compose up --build -d
 
+test-e2e:
+	python -m robot -d quality/end-to-end/results quality/end-to-end/tests/chat.robot
+
 # RUN
 run:
 	docker-compose up -d

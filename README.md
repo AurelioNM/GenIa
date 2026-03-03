@@ -38,7 +38,7 @@ Suggest me products on the PETS category
 SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
 Suggest me products that match with my purchase history
 
-SUGGEST_DAY_TO_GO_OUT_BASED_ON_WEATHER
+SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER
 I want to go for a walk on a rainy day
 
 TARANTINO_QUESTION
