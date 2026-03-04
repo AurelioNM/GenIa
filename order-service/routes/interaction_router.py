@@ -66,7 +66,7 @@ async def get_interaction(
         logger.info(
             f"Started request getInteractionV2: session_id={session_id}, body={interaction_request }"
         )
-        response: InteractionOutputV2 = await service.get_chat_interaction_v2(
+        response: InteractionOutputV2 = await service.get_chat_interaction_with_tools(
             interaction_request, session_id
         )
 

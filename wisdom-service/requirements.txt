@@ -1,0 +1,10 @@
+fastApi
+uvicorn
+pydantic
+pytest
+python-dotenv
+pylint
+PyYAML
+pytest-cov
+httpx
+fastmcp

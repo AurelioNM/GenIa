@@ -70,15 +70,17 @@ class InteractionService:
 
         return output
 
-    async def get_chat_interaction_v2(
+    async def get_chat_interaction_with_tools(
         self, interaction_request: InteractionRequest, session_id: str
     ) -> InteractionOutputV2:
         self.logger.info("Getting chat interaction")
 
         history = self.cache_service.get_chat_history(session_id)
 
-        output: InteractionOutputV2 = await self.intation_service.get_intation_v2(
-            interaction_request, history
+        output: InteractionOutputV2 = (
+            await self.intation_service.get_intation_with_tools(
+                interaction_request, history
+            )
         )
 
         self.cache_service.save_chat_history(

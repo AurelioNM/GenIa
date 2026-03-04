@@ -22,3 +22,4 @@ redis
 pandas
 robotframework
 robotframework-requests
+fastmcp

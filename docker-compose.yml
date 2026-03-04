@@ -188,6 +188,28 @@ services:
     networks:
       - gen-ia-network
 
+  # WISDOM
+  wisdom-service:
+    build:
+      context: ./wisdom-service
+    container_name: wisdom-service
+    ports:
+      - "8014:8000"
+    volumes:
+      - ./wisdom-service:/app
+    working_dir: /app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app
+      --log-config /app/configs/log_conf.yml
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - gen-ia-network
+
 volumes:
   product_db_vol: {}
   customer_db_vol: {}

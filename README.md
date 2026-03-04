@@ -9,7 +9,10 @@
         - [X] sugerir produto baseado em historico de compras
         - [X] sugestao baseada no clima
         - [X] reponder Q&A do tarantino
-    - [ ] implementar MCP
+    - MCP server
+        - [ ] subir service novo como MCP server
+            - input: Qual e a frase/sabedoria do dia?
+            - output: {server pega uma frase aleatoria e devolve}
 - Observability
     - [ ] gerar metricas
     - [ ] config prometheus

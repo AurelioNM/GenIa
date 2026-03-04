@@ -11,7 +11,7 @@ from models.product import ProductSummary
 from models.weather import Weather
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import PydanticOutputParser
-from prompts.intation_prompt import intation_template, intation_template_v2
+from prompts.intation_prompt import intation_template, intation_template_with_tools
 from prompts.weather_prompt import weather_template
 from prompts.question_prompt import question_template
 
@@ -43,11 +43,11 @@ class IntationService:
 
         return parsed_output
 
-    async def get_intation_v2(
+    async def get_intation_with_tools(
         self, input: InteractionRequest, history: List[dict] = None
     ) -> InteractionOutputV2:
         self.logger.info("Getting chat intation v2")
-        prompt_template = ChatPromptTemplate.from_template(intation_template_v2)
+        prompt_template = ChatPromptTemplate.from_template(intation_template_with_tools)
 
         prompt_message = prompt_template.format_messages(
             text=input.input,
