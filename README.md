@@ -5,10 +5,10 @@
     - [ ] implementar guardrails
     - transformar em tools os seguintes fluxos
         - [X] processar compra
-        - [ ] sugerir produto baseado em categoria
-        - [ ] sugerir produto baseado em historico de compras
-        - [ ] sugestao baseada no clima
-        - [ ] reponder Q&A do tarantino
+        - [X] sugerir produto baseado em categoria
+        - [X] sugerir produto baseado em historico de compras
+        - [X] sugestao baseada no clima
+        - [X] reponder Q&A do tarantino
     - [ ] implementar MCP
 - Observability
     - [ ] gerar metricas
@@ -20,29 +20,9 @@
     - [ ] testes unitarios para forecast-service
     - [ ] testes unitarios para product-service
 	- [ ] basic load tests
-	- [ ] test end to end apis
+	- [X] test end to end chat intantions
 - [ ] debitos funcionais/tecnicos
     - [ ] cenario de cliente tentar comprar produtos que nao existam
     - [ ] cenario de cliente tentar pedir sugestao de categoria que nao exista
     - [ ] fazer a IA perguntar quais produtos se o cliente falar que quer comprar, mas nao especificar quais
     - [ ] cliente pediu sugestao de produto baseado no historico, mas nao tem compras anteriores
-
-
-Chat - Casos de teste
-PURCHASE_PRODUCT
-I would like to buy 1 Catnip and 5 Xuru
-
-SUGGEST_PRODUCT_BASED_ON_CATEGORY
-Suggest me products on the PETS category
-
-SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY
-Suggest me products that match with my purchase history
-
-SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER
-I want to go for a walk on a rainy day
-
-TARANTINO_QUESTION
-Did Tarantino won the oscar? If yes, with movies?
-
-UNKNOWN
-Tell me how to do backflips

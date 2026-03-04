@@ -76,12 +76,10 @@ class OrderService:
     def _update_products_quantity(
         self, order_request: OrderRequest, products_list: ProductList
     ):
-        # Build a lookup dict: { name -> quantity }
         quantity_map = {
             product.name: product.quantity for product in order_request.products
         }
 
-        # Inject quantity into products
         for product in products_list.products:
             product.quantity = quantity_map.get(product.name)
 

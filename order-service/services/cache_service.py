@@ -37,7 +37,7 @@ class CacheService:
         )
 
         key = self.session_key_prefix + session_id
-        history: List[dict] = history[-6:]
+        history: List[dict] = history[-4:]
         history.append(
             {
                 "role": "user",

@@ -11,8 +11,10 @@ from models.question_and_answer import QuestionAndAnswer
 class QuestionStorage:
     def __init__(self, db_connection: MongoClient):
         self.logger = logging.getLogger(__name__)
+
         self.db_connection: MongoClient = db_connection
         self.collection = self.db_connection.get_collection("question_and_answer")
+
         self.embedding_model = OllamaEmbeddings(
             model="nomic-embed-text",
             base_url=os.getenv("OLLAMA_BASE_URL"),
@@ -63,11 +65,6 @@ class QuestionStorage:
             self.logger.info(
                 f"Generating embeddings and in DB: Q&A={question_and_answers}"
             )
-
-            self.logger.info(f"Generating test embedding")
-
-            test = self.embedding_model.embed_query("hello world")
-            self.logger.info(f"Generated test embedding: {test[:5]}...")
 
             documents = []
 
