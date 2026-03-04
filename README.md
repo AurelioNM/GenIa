@@ -18,14 +18,15 @@
     - [ ] config prometheus
     - [ ] criar dashs basicos no grafana
 - Tests
+	- [X] test end to end chat intantions
     - [X] testes unitarios para product-service
     - [ ] testes unitarios para customer-service
     - [ ] testes unitarios para forecast-service
     - [ ] testes unitarios para product-service
 	- [ ] basic load tests
-	- [X] test end to end chat intantions
-- [ ] debitos funcionais/tecnicos
+- Debitos funcionais/tecnicos
     - [ ] cenario de cliente tentar comprar produtos que nao existam
     - [ ] cenario de cliente tentar pedir sugestao de categoria que nao exista
     - [ ] fazer a IA perguntar quais produtos se o cliente falar que quer comprar, mas nao especificar quais
     - [ ] cliente pediu sugestao de produto baseado no historico, mas nao tem compras anteriores
+

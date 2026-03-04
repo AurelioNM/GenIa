@@ -3,7 +3,7 @@ Resource    ../resources/common.robot
 Resource   ../variables/env.robot
 
 *** Test Cases ***
-Should Interact SUGGEST_PRODUCT_BASED_ON_CATEGORY Successfully
+Should Interact with intation SUGGEST_PRODUCT_BASED_ON_CATEGORY Successfully
     Create Chat Session
 
     Execute Chat Interaction
@@ -13,7 +13,7 @@ Should Interact SUGGEST_PRODUCT_BASED_ON_CATEGORY Successfully
     Sleep    10s
 
 
-Should Interact SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY Successfully
+Should Interact with intation SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY Successfully
     Create Chat Session
 
     Execute Chat Interaction
@@ -23,7 +23,7 @@ Should Interact SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY Successfully
     Sleep    10s
 
 
-Should Interact SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER Successfully
+Should Interact with intation SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER Successfully
     Create Chat Session
 
     Execute Chat Interaction
@@ -33,7 +33,7 @@ Should Interact SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER Successfully
     Sleep    10s
 
 
-Should Interact PURCHASE_PRODUCT Successfully
+Should Interact with intation PURCHASE_PRODUCT Successfully
     Create Chat Session
 
     Execute Chat Interaction
@@ -43,7 +43,7 @@ Should Interact PURCHASE_PRODUCT Successfully
     Sleep    10s
 
 
-Should Interact TARANTINO_QUESTION Successfully
+Should Interact with intation TARANTINO_QUESTION Successfully
     Create Chat Session
 
     Execute Chat Interaction
@@ -53,7 +53,7 @@ Should Interact TARANTINO_QUESTION Successfully
     Sleep    10s
 
 
-Should Interact UNKNOWN Successfully
+Should Interact with intation UNKNOWN Successfully
     Create Chat Session
 
     Execute Chat Interaction

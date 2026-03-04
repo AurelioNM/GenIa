@@ -46,21 +46,6 @@ class LlmClient:
         agent = create_tool_calling_agent(self.llm_groq, tools, prompt)
         self.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-    def invoke(self, prompt) -> str:
-        try:
-            self.logger.info(f"Generating LLM output for prompt={prompt}")
-
-            response = self.llm_groq.invoke(prompt)
-
-            content = response.content
-
-            self.logger.info(f"LLM output response: {content}")
-            return content
-
-        except httpx.RequestError as e:
-            self.logger.error(f"Failed to generate LLM output: {e}")
-            raise
-
     async def invoke_with_tools(self, prompt) -> str:
         try:
             self.logger.info(f"Generating LLM output with tools")
@@ -71,6 +56,21 @@ class LlmClient:
 
             self.logger.info(f"LLM output response: response={response}")
 
+            return content
+
+        except httpx.RequestError as e:
+            self.logger.error(f"Failed to generate LLM output: {e}")
+            raise
+
+    def invoke(self, prompt) -> str:
+        try:
+            self.logger.info(f"Generating LLM output for prompt={prompt}")
+
+            response = self.llm_groq.invoke(prompt)
+
+            content = response.content
+
+            self.logger.info(f"LLM output response: {content}")
             return content
 
         except httpx.RequestError as e:

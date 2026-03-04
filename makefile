@@ -42,6 +42,8 @@ llm-pull-model:
 llm-list-models:
 	docker exec -it order-llm-ollama ollama list
 
+mcp-inspector:
+	npx @modelcontextprotocol/inspector
 
 # SERVICE UTILS
 log:

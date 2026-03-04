@@ -1,10 +1,10 @@
 import random
-from fastmcp import FastMCP
-import uvicorn
+from mcp.server.fastmcp import FastMCP
+
 
 mcp = FastMCP(
     name="wisdom-server",
-    instructions="This MCP app provides random funny wisdoms.",
+    instructions="Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.",
 )
 
 
@@ -41,11 +41,9 @@ WISDOMS = [
 @mcp.tool()
 def wisdom_of_the_day() -> dict:
     """
-    Returns a random funny wisdom.
+    Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.
     """
-
     return {"wisdom": random.choice(WISDOMS)}
 
 
-if __name__ == "__main__":
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=8000, log_level="debug")
+app = mcp.streamable_http_app()
