@@ -1,6 +1,6 @@
-question,answer
-Which films were directed by Quentin Tarantino?,"Some films directed by Quentin Tarantino include Pulp Fiction, Kill Bill Vol. 1, Kill Bill Vol. 2, Django Unchained, Inglourious Basterds, and Once Upon a Time in Hollywood."
-Which Tarantino film won an Oscar?,Django Unchained and Pulp Fiction won Oscars. Tarantino won for Best Original Screenplay.
-What is Tarantino's characteristic style?,"Tarantino is known for long and striking dialogues, stylized violence, non-linear storytelling, and impactful soundtracks."
-In what year was Pulp Fiction released?,Pulp Fiction was released in 1994.
-Who stars in Kill Bill?,Uma Thurman is the protagonist of Kill Bill.
+subject,question,answer
+TARANTINO,Which films were directed by Quentin Tarantino?,"Some films directed by Quentin Tarantino include Pulp Fiction, Kill Bill Vol. 1, Kill Bill Vol. 2, Django Unchained, Inglourious Basterds, and Once Upon a Time in Hollywood."
+TARANTINO,Which Tarantino film won an Oscar?,Django Unchained and Pulp Fiction won Oscars. Tarantino won for Best Original Screenplay.
+TARANTINO,What is Tarantino's characteristic style?,"Tarantino is known for long and striking dialogues, stylized violence, non-linear storytelling, and impactful soundtracks."
+TARANTINO,In what year was Pulp Fiction released?,Pulp Fiction was released in 1994.
+TARANTINO,Who stars in Kill Bill?,Uma Thurman is the protagonist of Kill Bill.
