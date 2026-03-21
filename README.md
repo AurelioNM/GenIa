@@ -30,3 +30,31 @@
     - [ ] fazer a IA perguntar quais produtos se o cliente falar que quer comprar, mas nao especificar quais
     - [ ] cliente pediu sugestao de produto baseado no historico, mas nao tem compras anteriores
 
+Ver padrao langchain expression language
+    chain = prompt | model
+
+Usar padrao Langchain V1
+    https://docs.langchain.com/oss/python/releases/langchain-v1
+
+Fazer o MCP client
+    https://github.com/alejandro-ao/mcp-client-python/blob/master/api/mcp_client.py
+
+Usar MCP de conversao de moeda
+    https://medium.com/@sin4ch/building-a-simple-exchange-rate-mcp-server-using-fastmcp-c87d7a454545
+    https://github.com/wesbos/currency-conversion-mcp
+
+Langfuse para observabilidade na LLM
+    https://github.com/langfuse/langfuse?tab=readme-ov-file
+
+Ver curso Laggraph
+
+Separar order-service:
+    purchase mcp server
+    chat-agent-service
+
+melhorar criacao de documentos + upload
+    - script para gerar csv de Q&A
+    - rota para upload de documento
+    - script para upload de documento
+
+scriptar criacao de vector_index

@@ -13,7 +13,7 @@ venv:
 		echo "Virtual environment already exists."; \
 	fi
 
-setup:
+dep:
 	$(PIP) install -r requirements.txt
 
 update-deps:
@@ -21,6 +21,7 @@ update-deps:
 
 test-e2e:
 	python -m robot -d quality/end-to-end/results quality/end-to-end/tests/chat.robot
+
 
 # RUN
 run:
@@ -35,9 +36,8 @@ llm-clean-volume:
 	make down && docker volume rm genia_ollama_vol
 
 llm-pull-model:
-# 	docker exec -it order-llm-ollama ollama pull llama3
-	docker exec -it order-llm-ollama ollama pull nomic-embed-text
-	
+	docker exec -it order-llm-ollama ollama pull llama3 && \
+	docker exec -it order-llm-ollama ollama pull nomic-embed-text 
 
 llm-list-models:
 	docker exec -it order-llm-ollama ollama list
