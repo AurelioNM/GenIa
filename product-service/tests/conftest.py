@@ -1,11 +1,12 @@
 from datetime import datetime
+from typing import List
 from pytest import fixture
 
-from models.product import Product
+from models.product import Product, ProductCategories, ProductList
 
 
 @fixture(name="product")
-def fixture_product():
+def fixture_product() -> Product:
     return Product(
         id="01JFTE35ZRRZWCSKK6TBB1DZCT",
         name="Cat Bed",
@@ -17,3 +18,12 @@ def fixture_product():
         updated_at=None,
     )
 
+
+@fixture(name="product_list")
+def fixture_product_list(product) -> ProductList:
+    return ProductList(products=[product])
+
+
+@fixture(name="categories")
+def fixture_categories() -> ProductCategories:
+    return ProductCategories(categories=["DRINK", "SNACKS", "TECH", "PETS", "WEATHER"])

@@ -20,11 +20,16 @@ ServiceDep = Annotated[ProductService, Depends(get_product_service)]
 
 @router.get("/v1/products", response_model=List[Product])
 def get_all_products(service: ServiceDep):
-    logger.info("Started request getAllProductsV1")
-    products_list: List[Product] = service.get_all_products()
+    try:
+        logger.info("Started request getAllProductsV1")
+        products_list: List[Product] = service.get_all_products()
 
-    logger.info(f"Finished request getAllProductsV1: response={products_list}")
-    return products_list
+        logger.info(f"Finished request getAllProductsV1: response={products_list}")
+        return products_list
+    except Exception as ex:
+        logger.error(f"Failed request getAllProductsV1. Error: {ex}")
+
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
 
 
 @router.get("/v1/products/id/{id}", response_model=Product)
@@ -51,12 +56,10 @@ def get_products_by_names(names: ProductNames, service: ServiceDep):
 
         logger.info(f"Finished request getProductsByNamesV1: response={products}")
         return products
-    except ValueError as ex:
+    except Exception as ex:
         logger.error(f"Failed request getProductsByNamesV1. Error: {ex}")
 
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
 
 
 @router.get("/v1/products/categories/{category}", response_model=ProductList)
@@ -67,12 +70,10 @@ def get_products_by_category(category: str, service: ServiceDep):
 
         logger.info(f"Finished request getProductByCategoryV1: response={product}")
         return product
-    except ValueError as ex:
+    except Exception as ex:
         logger.error(f"Failed request getProductByCategoryV1. Error: {ex}")
 
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
 
 
 @router.get("/v1/products/categories", response_model=ProductCategories)
@@ -83,12 +84,10 @@ def get_product_categories(service: ServiceDep):
 
         logger.info(f"Finished request getProductCategoriesV1: response={categories}")
         return categories
-    except ValueError as ex:
+    except Exception as ex:
         logger.error(f"Failed request getProductCategoriesV1. Error: {ex}")
 
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
-        )
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
 
 
 @router.post(

@@ -46,7 +46,7 @@ Usar MCP de conversao de moeda
 Langfuse para observabilidade na LLM
     https://github.com/langfuse/langfuse?tab=readme-ov-file
 
-Ver curso Laggraph
+Ver curso LangGraph
 
 Separar order-service:
     purchase mcp server

@@ -65,7 +65,7 @@ test:
 		echo "❌ Service '$$SERVICE_DIR' not found"; \
 		exit 1; \
 	fi; \
-	cd "$$SERVICE_DIR" && ls $$SERVICE_DIR && pytest -vv -s
+	cd "$$SERVICE_DIR" && pytest -vv -s
 
 coverage:
 	@SERVICE=$(filter-out $@,$(MAKECMDGOALS)); \
