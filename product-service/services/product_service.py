@@ -11,6 +11,13 @@ class ProductService:
         self.storage = storage
         self.MINIMUM_PRICE = 1.0
 
+    def create_product(self, product: Product) -> Product:
+        self.logger.info("Creating product")
+
+        self._validate_product(product)
+
+        return self.storage.create_product(product)
+
     def get_all_products(self) -> List[Product]:
         self.logger.info("Getting all products")
         return self.storage.get_all_products()
@@ -35,14 +42,7 @@ class ProductService:
         self.logger.info("Getting product categories")
         return self.storage.get_product_categories()
 
-    def create_product(self, product: Product) -> Product:
-        self.logger.info("Creating product")
-
-        self.validate_product(product)
-
-        return self.storage.create_product(product)
-
-    def validate_product(self, product: Product):
+    def _validate_product(self, product: Product):
         if product.price < self.MINIMUM_PRICE:
             error = ValueError(
                 f"Price must be equal or greater than {self.MINIMUM_PRICE}"

@@ -18,6 +18,20 @@ def get_product_service(request: Request):
 ServiceDep = Annotated[ProductService, Depends(get_product_service)]
 
 
+@router.post("/v1/products/name", response_model=ProductList)
+def get_products_by_names(names: ProductNames, service: ServiceDep):
+    try:
+        logger.info(f"Started request getProductsByNamesV1: names={names.model_dump()}")
+        products: ProductList = service.get_products_by_names(names)
+
+        logger.info(f"Finished request getProductsByNamesV1: response={products}")
+        return products
+    except Exception as ex:
+        logger.error(f"Failed request getProductsByNamesV1. Error: {ex}")
+
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
+
+
 @router.get("/v1/products", response_model=List[Product])
 def get_all_products(service: ServiceDep):
     try:
@@ -46,20 +60,6 @@ def get_product_by_id(id: str, service: ServiceDep):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Error: {ex}"
         )
-
-
-@router.post("/v1/products/name", response_model=ProductList)
-def get_products_by_names(names: ProductNames, service: ServiceDep):
-    try:
-        logger.info(f"Started request getProductsByNamesV1: names={names.model_dump()}")
-        products: ProductList = service.get_products_by_names(names)
-
-        logger.info(f"Finished request getProductsByNamesV1: response={products}")
-        return products
-    except Exception as ex:
-        logger.error(f"Failed request getProductsByNamesV1. Error: {ex}")
-
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {ex}")
 
 
 @router.get("/v1/products/categories/{category}", response_model=ProductList)

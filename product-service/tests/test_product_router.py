@@ -43,6 +43,27 @@ def fixture_categories_json(categories):
     return {"categories": categories.categories}
 
 
+def test_create_product(service, client, product, product_json):
+    service.create_product.return_value = product
+
+    response = client.post("/v1/products", json=product_json)
+
+    assert response.status_code == 201
+    assert response.json() == product_json
+
+    service.create_product.assert_called_once_with(product)
+
+
+def test_create_product_bad_request(service, client, product, product_json):
+    service.create_product.side_effect = ValueError("Product validation")
+
+    response = client.post("/v1/products", json=product_json)
+
+    assert response.status_code == 400
+
+    service.create_product.assert_called_once_with(product)
+
+
 def test_get_all_products(service, client, product, product_json):
     service.get_all_products.return_value = [product]
 
@@ -50,6 +71,16 @@ def test_get_all_products(service, client, product, product_json):
 
     assert response.status_code == 200
     assert response.json() == [product_json]
+
+    service.get_all_products.assert_called_once()
+
+
+def test_get_all_products_internal_error(service, client):
+    service.get_all_products.side_effect = ValueError("Error")
+
+    response = client.get("/v1/products")
+
+    assert response.status_code == 500
 
     service.get_all_products.assert_called_once()
 
@@ -138,24 +169,3 @@ def test_get_product_categories_internal_error(service, client):
     assert response.status_code == 500
 
     service.get_product_categories.assert_called_once()
-
-
-def test_create_product(service, client, product, product_json):
-    service.create_product.return_value = product
-
-    response = client.post("/v1/products", json=product_json)
-
-    assert response.status_code == 201
-    assert response.json() == product_json
-
-    service.create_product.assert_called_once_with(product)
-
-
-def test_create_product_bad_request(service, client, product, product_json):
-    service.create_product.side_effect = ValueError("Product validation")
-
-    response = client.post("/v1/products", json=product_json)
-
-    assert response.status_code == 400
-
-    service.create_product.assert_called_once_with(product)
