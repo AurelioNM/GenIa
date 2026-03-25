@@ -11,6 +11,32 @@ class CustomerStorage:
         self.logger = logging.getLogger(__name__)
         self.db = db_connection
 
+    def create_customer(self, customer: Customer) -> Customer:
+        self.logger.info("Inserting customer in DB")
+        try:
+            with self.db.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO customers
+                    (id, name, email, active, created_at)
+                    VALUES (%s, %s, %s, %s, %s);
+                    """,
+                    (
+                        customer.id,
+                        customer.name,
+                        customer.email,
+                        customer.active,
+                        customer.created_at,
+                    ),
+                )
+
+                self.db.commit()
+                return customer
+        except DatabaseError as ex:
+            self.logger.error(f"Failed to insert customer in DB. DatabaseError: {ex}")
+            self.db.rollback()
+            raise
+
     def get_all_customers(self) -> List[Customer]:
         self.logger.info("Searching all customers in DB")
         try:
@@ -78,32 +104,6 @@ class CustomerStorage:
             self.logger.error(
                 f"Failed to search customer with email={email} in DB. DatabaseError: {ex}"
             )
-            raise
-
-    def create_customer(self, customer: Customer) -> Customer:
-        self.logger.info("Inserting customer in DB")
-        try:
-            with self.db.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO customers
-                    (id, name, email, active, created_at)
-                    VALUES (%s, %s, %s, %s, %s);
-                    """,
-                    (
-                        customer.id,
-                        customer.name,
-                        customer.email,
-                        customer.active,
-                        customer.created_at,
-                    ),
-                )
-
-                self.db.commit()
-                return customer
-        except DatabaseError as ex:
-            self.logger.error(f"Failed to insert customer in DB. DatabaseError: {ex}")
-            self.db.rollback()
             raise
 
     def map_customer_row_to_model(self, row: List) -> Customer:

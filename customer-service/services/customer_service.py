@@ -10,6 +10,10 @@ class CustomerService:
         self.logger = logging.getLogger(__name__)
         self.storage = storage
 
+    def create_customer(self, customer: Customer) -> Customer:
+        self.logger.info("Creating customer")
+        return self.storage.create_customer(customer)
+
     def get_all_customers(self) -> List[Customer]:
         self.logger.info("Getting all customers")
         return self.storage.get_all_customers()
@@ -21,7 +25,3 @@ class CustomerService:
     def get_customer_by_email(self, email: str) -> Customer:
         self.logger.info("Getting customer by email")
         return self.storage.get_customer_by_email(email)
-
-    def create_customer(self, customer: Customer) -> Customer:
-        self.logger.info("Creating customer")
-        return self.storage.create_customer(customer)

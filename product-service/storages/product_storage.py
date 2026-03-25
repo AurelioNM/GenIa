@@ -11,6 +11,34 @@ class ProductStorage:
         self.logger = logging.getLogger(__name__)
         self.db = db_connection
 
+    def create_product(self, product: Product) -> Product:
+        self.logger.info("Inserting product in DB")
+        try:
+            with self.db.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO products
+                    (id, name, description, price, category, active, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s);
+                    """,
+                    (
+                        product.id,
+                        product.name,
+                        product.description,
+                        product.price,
+                        product.category,
+                        product.active,
+                        product.created_at,
+                    ),
+                )
+
+                self.db.commit()
+                return product
+        except DatabaseError as ex:
+            self.logger.error(f"Failed to insert product in DB. DatabaseError: {ex}")
+            self.db.rollback()
+            raise
+
     def get_all_products(self) -> List[Product]:
         self.logger.info("Searching all products in DB")
         try:
@@ -136,34 +164,6 @@ class ProductStorage:
             self.logger.error(
                 f"Failed to search product categories in DB. DatabaseError: {ex}"
             )
-            raise
-
-    def create_product(self, product: Product) -> Product:
-        self.logger.info("Inserting product in DB")
-        try:
-            with self.db.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO products
-                    (id, name, description, price, category, active, created_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s);
-                    """,
-                    (
-                        product.id,
-                        product.name,
-                        product.description,
-                        product.price,
-                        product.category,
-                        product.active,
-                        product.created_at,
-                    ),
-                )
-
-                self.db.commit()
-                return product
-        except DatabaseError as ex:
-            self.logger.error(f"Failed to insert product in DB. DatabaseError: {ex}")
-            self.db.rollback()
             raise
 
     def map_product_row_to_model(self, row: List) -> Product:

@@ -22,7 +22,7 @@ def test_create_product(service, storage, product):
     result = service.create_product(product)
     assert result == product
 
-    storage.create_product.assert_called_once()
+    storage.create_product.assert_called_once_with(product)
 
 
 def test_create_product_validation_error(service, storage, product):
