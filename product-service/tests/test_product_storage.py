@@ -6,7 +6,7 @@ from pytest import fixture
 import pytest
 
 from storages.product_storage import ProductStorage
-from models.product import Product, ProductCategories, ProductNames
+from models.product import ProductNames
 
 
 @fixture(name="cursor")

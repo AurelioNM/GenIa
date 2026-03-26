@@ -15,22 +15,34 @@ class SuggestProductOnCategoryTool:
 
     def _execute(
         self,
-        category: str,  # TODO make it an ENUM
-    ) -> SuggestProductToolOutput:
-        self.logger.info(
-            f"Executing tool suggest_product_on_category: category={category}"
-        )
+        category: str,
+    ) -> dict[str, List[ProductSummary]]:
+        try:
+            self.logger.info(
+                f"Executing tool suggest_product_on_category: category={category}"
+            )
 
-        products: List[ProductSummary] = self.product_service.get_products_by_category(
-            category
-        )
+            products: List[ProductSummary] = (
+                self.product_service.get_products_by_category(category)
+            )
 
-        return SuggestProductToolOutput(products=products).model_dump()
+            return SuggestProductToolOutput(products=products).model_dump()
+
+        except Exception as e:
+            self.logger.error(f"Error executing tool suggest_product_on_category: {e}")
+            return SuggestProductToolOutput(products=[]).model_dump()
 
     def get_tool(self):
         return StructuredTool.from_function(
             func=self._execute,
             name="suggest_product_on_category",
-            description="Get product list based on a category the customer chose. Returns a list of products with their names and prices.",
+            description="""Get product list based on a category the customer chose. Returns a list of products with their names and prices.
+
+            Args:
+                category: The category of products to retrieve.
+
+            Returns:
+                A dictionary containing a list of products with their names, prices and descriptions.
+            """,
             args_schema=SuggestProductOnCategoryToolInput,
         )

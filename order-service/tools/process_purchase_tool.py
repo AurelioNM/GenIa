@@ -16,26 +16,39 @@ class ProcessPurchaseTool:
         self,
         email: str,
         products: List[ProductRequest],
-    ) -> str:
-        self.logger.info(
-            f"Executing tool purchase_product: email={email}, products={products}"
-        )
+    ) -> dict[str, str]:
+        try:
+            self.logger.info(
+                f"Executing tool purchase_product: email={email}, products={products}"
+            )
 
-        order_request = OrderRequest(
-            customer_email=email,
-            products=products,
-        )
-        self.order_service.create_order(order_request)
+            order_request = OrderRequest(
+                customer_email=email,
+                products=products,
+            )
+            self.order_service.create_order(order_request)
 
-        self.logger.info(
-            f"Successfully executed tool purchase_product: email={email}, products={products}"
-        )
-        return "Order successfully created."
+            self.logger.info(
+                f"Successfully executed tool purchase_product: email={email}, products={products}"
+            )
+            return {"status": "success"}
+
+        except Exception as e:
+            self.logger.error(f"Error executing tool purchase_product: {e}")
+            return {"status": "error"}
 
     def get_tool(self):
         return StructuredTool.from_function(
             func=self._execute,
             name="purchase_product",
-            description="Creates a purchase order for the given customer with the specified products and quantities.",
+            description="""Creates a purchase order for the given customer with the specified products and quantities.
+
+            Args:
+                customer_email: The email of the customer making the purchase.
+                products: A list of products to purchase.
+
+            Returns:
+                A dictionary containing the status of the purchase.
+            """,
             args_schema=PurchaseProductToolInput,
         )

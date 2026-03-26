@@ -6,10 +6,7 @@ from services.product_service import ProductService
 from services.weather_service import WeatherService
 from models.product import ProductSummary
 from models.weather import Weather
-from models.tool_output import (
-    SuggestDayAndProductOnWeatherToolOutput,
-    SuggestProductToolOutput,
-)
+from models.tool_output import SuggestDayAndProductOnWeatherToolOutput
 
 
 class SuggestDayAndProductOnWeatherTool:
@@ -22,21 +19,37 @@ class SuggestDayAndProductOnWeatherTool:
 
     def _execute(
         self,
-    ) -> SuggestProductToolOutput:
-        self.logger.info(f"Executing tool suggest_day_and_product_on_weather")
+    ) -> dict[str, List[Weather] | List[ProductSummary]]:
+        try:
+            self.logger.info(f"Executing tool suggest_day_and_product_on_weather")
 
-        forecast: List[Weather] = self.weather_service.get_weather_forecast()
-        products: List[ProductSummary] = self.product_service.get_products_by_category(
-            "WEATHER"
-        )
+            forecast: List[Weather] = self.weather_service.get_weather_forecast()
+            products: List[ProductSummary] = (
+                self.product_service.get_products_by_category("WEATHER")
+            )
 
-        return SuggestDayAndProductOnWeatherToolOutput(
-            forecast=forecast, products=products
-        ).model_dump()
+            return SuggestDayAndProductOnWeatherToolOutput(
+                forecast=forecast, products=products
+            ).model_dump()
+
+        except Exception as e:
+            self.logger.error(
+                f"Error executing tool suggest_day_and_product_on_weather: {e}"
+            )
+            return SuggestDayAndProductOnWeatherToolOutput(
+                forecast=[], products=[]
+            ).model_dump()
 
     def get_tool(self):
         return StructuredTool.from_function(
             func=self._execute,
             name="suggest_day_and_product_on_weather",
-            description="Get weather forecast and products on weather category. Based on customer weather preference, use to recomend day to go out and products to buy.",
+            description="""Get weather forecast and products on weather category. Based on customer weather preference, use to recomend day to go out and products to buy.
+
+            Args:
+                None
+
+            Returns:
+                A dictionary containing the weather forecast and products on weather category.
+            """,
         )

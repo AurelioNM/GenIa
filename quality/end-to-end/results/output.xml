@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.10.12 on linux)" generated="2026-03-26T16:50:47.967526" rpa="false" schemaversion="5">
+<suite id="s1" name="Chat" source="/home/dev/git/GenIa/quality/end-to-end/tests/chat.robot">
+<test id="s1-t1" name="Should Interact with intation SUGGEST_PRODUCT_BASED_ON_CATEGORY Successfully" line="6">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:50:48.045962" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:50:48.045771" elapsed="0.000380"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:50:48.045235" elapsed="0.000999"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:50:48.047391" level="INFO">${body} = {'input': 'Suggest me products on the snacks category', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:50:48.046861" elapsed="0.000561"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:50:48.047897" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:50:48.047539" elapsed="0.000387"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:50:49.051465" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '94', 'Content-Type': 'application/json'} 
+ body=b'{"input": "Suggest me products on the snacks category", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:50:49.051698" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:50:47 GMT', 'server': 'uvicorn', 'content-length': '296', 'content-type': 'application/json'} 
+ body={"output":"Here are a few tasty snack picks you might enjoy:\n\n- **Nutella** – creamy chocolate spread, $35.00  \n- **Ruffles** – crunchy potato chips, $9.90  \n- **Maizena Cookie** – sweet cookie treat, $4.50  \n\nLet me know if any catch your eye or if you’d like more options!"} 
+ </msg>
+<msg time="2026-03-26T16:50:49.051992" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:50:48.048031" elapsed="1.004030"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:50:49.052416" elapsed="0.000877"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:50:49.053640" elapsed="0.001604"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:50:49.055600" elapsed="0.000497"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:50:49.056236" elapsed="0.000105"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>Suggest me products on the snacks category</arg>
+<status status="PASS" start="2026-03-26T16:50:48.046511" elapsed="1.010090"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:50:59.057836" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:50:49.056981" elapsed="10.001004"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:50:48.044478" elapsed="11.013881"/>
+</test>
+<test id="s1-t2" name="Should Interact with intation SUGGEST_PRODUCT_BASED_ON_ORDER_HISTORY Successfully" line="16">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:50:59.060587" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:50:59.060347" elapsed="0.000470"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:50:59.059961" elapsed="0.000956"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:50:59.062430" level="INFO">${body} = {'input': 'Suggest me products that match with my purchase history', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:50:59.061762" elapsed="0.000714"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:50:59.063183" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:50:59.062650" elapsed="0.000576"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:00.378946" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '107', 'Content-Type': 'application/json'} 
+ body=b'{"input": "Suggest me products that match with my purchase history", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:51:00.379048" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:50:58 GMT', 'server': 'uvicorn', 'content-length': '321', 'content-type': 'application/json'} 
+ body={"output":"Based on your past purchases, you might like these items:\n\n- **Nutella** – creamy chocolate spread – $35.00  \n- **Ruffles** – crunchy potato chips – $9.90  \n- **Maizena Cookie** – sweet cookie treat – $4.50  \n\nLet me know if any catch your eye or if you’d like more recommendations!"} 
+ </msg>
+<msg time="2026-03-26T16:51:00.379223" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:50:59.063385" elapsed="1.315877"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:00.379453" elapsed="0.000453"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:00.380053" elapsed="0.000819"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:51:00.381072" elapsed="0.000225"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:51:00.381363" elapsed="0.000041"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>Suggest me products that match with my purchase history</arg>
+<status status="PASS" start="2026-03-26T16:50:59.061227" elapsed="1.320305"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:51:10.382400" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:51:00.381694" elapsed="10.001191"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:50:59.058869" elapsed="11.324928"/>
+</test>
+<test id="s1-t3" name="Should Interact with intation SUGGEST_DAY_AND_PRODUCTS_BASED_ON_WEATHER Successfully" line="26">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:10.389303" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:51:10.388476" elapsed="0.001586"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:10.387110" elapsed="0.003354"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:10.395274" level="INFO">${body} = {'input': 'I want to go for a walk on a rainy day', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:10.393219" elapsed="0.002260"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:10.397742" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:10.396043" elapsed="0.001839"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:12.023971" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '90', 'Content-Type': 'application/json'} 
+ body=b'{"input": "I want to go for a walk on a rainy day", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:51:12.024068" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:51:09 GMT', 'server': 'uvicorn', 'content-length': '300', 'content-type': 'application/json'} 
+ body={"output":"A rainy‑day walk calls for staying dry and comfortable. Here are a few picks:\n\n- **Waterproof Windbreaker** – $70.90  \n- **Waterproof Backpack Cover** – $7.50  \n- **Umbrella** – $3.00  \n\nLet me know if any of these work for you or if you’d like to add them to your order!"} 
+ </msg>
+<msg time="2026-03-26T16:51:12.024224" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:51:10.398414" elapsed="1.625845"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:12.024452" elapsed="0.000441"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:12.025032" elapsed="0.000804"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:51:12.026002" elapsed="0.000285"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:51:12.026356" elapsed="0.000042"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>I want to go for a walk on a rainy day</arg>
+<status status="PASS" start="2026-03-26T16:51:10.391520" elapsed="1.635011"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:51:22.027323" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:51:12.026709" elapsed="10.000996"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:10.384815" elapsed="11.643659"/>
+</test>
+<test id="s1-t4" name="Should Interact with intation PURCHASE_PRODUCT Successfully" line="36">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:22.033136" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:51:22.032430" elapsed="0.001460"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:22.031228" elapsed="0.003117"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:22.039780" level="INFO">${body} = {'input': 'I would like to buy 7 Ruffles and a Nutella', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:22.036929" elapsed="0.003000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:22.042217" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:22.040489" elapsed="0.001867"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:23.393251" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '95', 'Content-Type': 'application/json'} 
+ body=b'{"input": "I would like to buy 7 Ruffles and a Nutella", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:51:23.393357" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:51:21 GMT', 'server': 'uvicorn', 'content-length': '194', 'content-type': 'application/json'} 
+ body={"output":"Your order for 7 Ruffles and 1 Nutella is confirmed—thanks, Aurelio! 🎉 Let me know if you’d like anything else added or have any questions about delivery. Happy snacking!"} 
+ </msg>
+<msg time="2026-03-26T16:51:23.393595" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:51:22.042858" elapsed="1.350779"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:23.393949" elapsed="0.000557"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:23.394661" elapsed="0.000878"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:51:23.395692" elapsed="0.000248"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:51:23.396015" elapsed="0.000045"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>I would like to buy 7 Ruffles and a Nutella</arg>
+<status status="PASS" start="2026-03-26T16:51:22.035271" elapsed="1.360966"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:51:33.397216" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:51:23.396449" elapsed="10.001160"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:22.029366" elapsed="11.369115"/>
+</test>
+<test id="s1-t5" name="Should Interact with intation TARANTINO_QUESTION Successfully" line="46">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:33.403354" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:51:33.402650" elapsed="0.001437"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:33.401347" elapsed="0.003053"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:33.409047" level="INFO">${body} = {'input': 'Did Tarantino won the oscar? If yes, with movies?', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:33.407051" elapsed="0.002141"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:33.411475" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:33.409735" elapsed="0.001880"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:36.420141" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '101', 'Content-Type': 'application/json'} 
+ body=b'{"input": "Did Tarantino won the oscar? If yes, with movies?", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:51:36.420252" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:51:32 GMT', 'server': 'uvicorn', 'content-length': '285', 'content-type': 'application/json'} 
+ body={"output":"Quentin Tarantino has won two Oscars, both for **Best Original Screenplay**:  \n\n- **1995 – “Pulp Fiction”**  \n- **2013 – “Django Unchained”**  \n\nHe’s been nominated for directing (e.g., “The Revenant”) but hasn’t won a directing Oscar yet."} 
+ </msg>
+<msg time="2026-03-26T16:51:36.420432" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:51:33.412130" elapsed="3.008343"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:36.420685" elapsed="0.000526"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:36.421374" elapsed="0.000934"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:51:36.422470" elapsed="0.000262"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:51:36.422809" elapsed="0.000048"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>Did Tarantino won the oscar? If yes, with movies?</arg>
+<status status="PASS" start="2026-03-26T16:51:33.405352" elapsed="3.017659"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:51:46.423968" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:51:36.423204" elapsed="10.001146"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:33.399507" elapsed="13.025635"/>
+</test>
+<test id="s1-t6" name="Should Interact with intation UNKNOWN Successfully" line="56">
+<kw name="Create Chat Session" owner="common">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:46.429817" level="INFO">Creating Session using : alias=chat, url=http://localhost:8012, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>chat</arg>
+<arg>${CHAT_BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-26T16:51:46.429114" elapsed="0.002175"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:46.427958" elapsed="0.003649"/>
+</kw>
+<kw name="Execute Chat Interaction" owner="common">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:46.436193" level="INFO">${body} = {'input': 'Tell me how to do backflips', 'customer_email': 'aurelio@gmail.com'}</msg>
+<var>${body}</var>
+<arg>input=${input}</arg>
+<arg>customer_email=${customer_email}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:46.434174" elapsed="0.002163"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-26T16:51:46.438611" level="INFO">${headers} = {'session-id': '03KJ1MS4MP395H793TF9CT5BGF'}</msg>
+<var>${headers}</var>
+<arg>session-id=${session_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-26T16:51:46.436888" elapsed="0.001863"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-26T16:51:48.172553" level="INFO">POST Request : url=http://localhost:8012/v2/chat/interaction 
+ path_url=/v2/chat/interaction 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'session-id': '03KJ1MS4MP395H793TF9CT5BGF', 'Content-Length': '79', 'Content-Type': 'application/json'} 
+ body=b'{"input": "Tell me how to do backflips", "customer_email": "aurelio@gmail.com"}' 
+ </msg>
+<msg time="2026-03-26T16:51:48.172684" level="INFO">POST Response : url=http://localhost:8012/v2/chat/interaction 
+ status=200, reason=OK 
+ headers={'date': 'Thu, 26 Mar 2026 19:51:45 GMT', 'server': 'uvicorn', 'content-length': '440', 'content-type': 'application/json'} 
+ body={"output":"Sure! Start on a soft surface (gym mat or grass) and warm up your shoulders, core, and legs. Practice a strong, controlled jump, then pull your knees to your chest while tucking your chin. Spot your landing early, extend your legs, and land softly on the balls of your feet. Begin with assisted drills—use a spotting belt or a wall—and consider a coach or class for safety. Let me know if you’d like gear recommendations!"} 
+ </msg>
+<msg time="2026-03-26T16:51:48.172923" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>chat</arg>
+<arg>/v2/chat/interaction</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-26T16:51:46.439465" elapsed="1.733511"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>\nInteraction Input: ${input}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:48.173241" elapsed="0.000589"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Interaction Output:\n${response.json()}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-26T16:51:48.174049" elapsed="0.000865"/>
+</kw>
+<kw name="Status Should Be" owner="RequestsLibrary">
+<arg>200</arg>
+<arg>${response}</arg>
+<doc>Fails if response status code is different than the expected.</doc>
+<status status="PASS" start="2026-03-26T16:51:48.175084" elapsed="0.000238"/>
+</kw>
+<return>
+<value>${response}</value>
+<status status="PASS" start="2026-03-26T16:51:48.175391" elapsed="0.000044"/>
+</return>
+<arg>${SESSION_ID}</arg>
+<arg>${CUSTOMER_EMAIL}</arg>
+<arg>Tell me how to do backflips</arg>
+<status status="PASS" start="2026-03-26T16:51:46.432512" elapsed="1.743058"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-26T16:51:58.176503" level="INFO">Slept 10 seconds.</msg>
+<arg>10s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-26T16:51:48.175773" elapsed="10.001111"/>
+</kw>
+<status status="PASS" start="2026-03-26T16:51:46.426014" elapsed="11.751685"/>
+</test>
+<status status="PASS" start="2026-03-26T16:50:47.968380" elapsed="70.211047"/>
+</suite>
+<statistics>
+<total>
+<stat pass="6" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Chat" id="s1" pass="6" fail="0" skip="0">Chat</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
