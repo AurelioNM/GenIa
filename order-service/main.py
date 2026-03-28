@@ -13,6 +13,7 @@ from clients.product_client import ProductClient
 from clients.weather_client import WeatherClient
 from configs.db_conn import get_database_connection
 from configs.cache_conn import get_cache_connection
+from configs.model_conn import get_model_connection
 from routes.interaction_router import router as interaction_router
 from routes.chat_studies_router import router as chat_studies_router
 from routes.order_router import router as order_router
@@ -94,14 +95,18 @@ async def lifespan(app: FastAPI):
 
     llm_groq = ChatGroq(model_name="openai/gpt-oss-120b", temperature=0.7)
 
-    llm_client = LlmClient(
-        llm_ollama=llm_ollama,
+    model_connection = await get_model_connection(
         llm_groq=llm_groq,
         process_purchase_tool=process_purchase_tool,
         suggest_product_on_category_tool=suggest_product_on_category_tool,
         suggest_product_on_history_tool=suggest_product_on_history_tool,
         suggest_day_and_product_on_weather_tool=suggest_day_and_product_on_weather_tool,
         get_question_answer_base_tool=get_question_answer_base_tool,
+    )
+
+    llm_client = LlmClient(
+        default_model=llm_groq,
+        agent_executor=model_connection,
     )
     intation_service = IntationService(llm_client=llm_client)
 

@@ -64,32 +64,25 @@ melhorar criacao de documentos + upload
 
 scriptar criacao de vector_index
 
-Tools - Uma boa docstring de tool deve ter:
-    O que a tool faz (alto nível)
-    Quando usar
-    Explicação dos parâmetros (semântica!)
-    Output (especialmente se não for óbvio)
-    Exemplo: 
-        def set_light_values(
-        brightness: int,
-        color_temp: str,
-        context: ToolContext) -> dict[str, int | str]:
-            """This tool sets the brightness and color temperature of the room lights
-            in the user's current location.
+Exemplo configurando agent com tools
+    currency_agent = LlmAgent(
+        name="currency_agent",
+        model=Gemini(model="gemini-2.5-flash-lite", retry_options=retry_config),
+        instruction="""You are a smart currency conversion assistant.
 
-            Args:
-                brightness: Light level from 0 to 100. Zero is off and 100 is full
-                            brightness.
-                color_temp: Color temperature of the light fixture, which can be
-                            'daylight', 'cool' or 'warm'.
-                context: A ToolContext object used to retrieve the user's location.
+        For currency conversion requests:
+        1. Use `get_fee_for_payment_method()` to find transaction fees
+        2. Use `get_exchange_rate()` to get currency conversion rates
+        3. Check the "status" field in each tool's response for errors
+        4. Calculate the final amount after fees based on the output from `get_fee_for_payment_method` and `get_exchange_rate` methods and provide a clear breakdown.
+        5. First, state the final converted amount.
+            Then, explain how you got that result by showing the intermediate amounts. Your explanation must include: the fee percentage and its
+            value in the original currency, the amount remaining after the fee, and the exchange rate used for the final conversion.
 
-            Returns:
-                A dictionary containing the set brightness and color temperature.
-            """
-            user_room_id = context.state["room_id"]
-            # This is an imaginary room lighting control API
-            room = light_system.get_room(user_room_id)
-            response = room.set_lights(brightness, color_temp)
-            return {"tool_response": response}
-    
+        If any tool returns status "error", explain the issue to the user clearly.
+        """,
+        tools=[get_fee_for_payment_method, get_exchange_rate],
+    )
+
+Exemplo error message para tool
+    "A tool that retrieves product data could return a response that says "No product data found for product ID XXX. Ask the customer to confirm the product name, and look up the product ID by name to confirm you have the correct ID.""

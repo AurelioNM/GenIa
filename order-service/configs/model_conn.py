@@ -1,0 +1,67 @@
+import os
+
+from langchain.tools import tool
+from langchain_classic.prompts import ChatPromptTemplate
+from langchain_core.prompts import MessagesPlaceholder
+from langchain_groq import ChatGroq
+from tools.process_purchase_tool import ProcessPurchaseTool
+from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
+from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
+from tools.answer_question_tool import GetQuestionAnswerBaseTool
+from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
+from langchain_classic.agents import AgentExecutor, Tool, create_tool_calling_agent
+from mcp import ClientSession
+from mcp.client.sse import sse_client
+from langchain_mcp_adapters.client import MultiServerMCPClient
+
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+async def load_mcp_tools():
+    client = MultiServerMCPClient(
+        {
+            "weather": {
+                "transport": "http",
+                "url": "http://wisdom-service:8000/mcp",
+            },
+        }
+    )
+
+    tools = await client.get_tools()
+    return tools
+
+
+async def get_model_connection(
+    llm_groq: ChatGroq,
+    process_purchase_tool: ProcessPurchaseTool,
+    suggest_product_on_category_tool: SuggestProductOnCategoryTool,
+    suggest_product_on_history_tool: SuggestProductOnHistoryTool,
+    suggest_day_and_product_on_weather_tool: SuggestDayAndProductOnWeatherTool,
+    get_question_answer_base_tool: GetQuestionAnswerBaseTool,
+) -> AgentExecutor:
+
+    mcp_tools = await load_mcp_tools()
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "You are a helpful assistant."),
+            ("human", "{input}"),
+            MessagesPlaceholder("agent_scratchpad"),
+        ]
+    )
+
+    tools = [
+        process_purchase_tool.get_tool(),
+        suggest_product_on_category_tool.get_tool(),
+        suggest_product_on_history_tool.get_tool(),
+        suggest_day_and_product_on_weather_tool.get_tool(),
+        get_question_answer_base_tool.get_tool(),
+        *mcp_tools,
+    ]
+
+    agent = create_tool_calling_agent(llm_groq, tools, prompt)
+
+    return AgentExecutor(agent=agent, tools=tools, verbose=True)

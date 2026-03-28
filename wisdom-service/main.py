@@ -1,10 +1,14 @@
 import random
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 
 mcp = FastMCP(
     name="wisdom-server",
     instructions="Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=False,
+    ),
 )
 
 
@@ -43,7 +47,10 @@ def wisdom_of_the_day() -> dict:
     """
     Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.
     """
-    return {"wisdom": random.choice(WISDOMS)}
+    result = random.choice(WISDOMS)
+    print(f"Selected wisdom: {result}")
+
+    return {"wisdom": result}
 
 
 app = mcp.streamable_http_app()

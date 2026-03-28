@@ -208,7 +208,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     networks:
-      - gen-ia-network
+      default:
+        aliases:
+          - localhost
+      gen-ia-network:
 
 volumes:
   product_db_vol: {}
