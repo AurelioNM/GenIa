@@ -8,12 +8,15 @@ import httpx
 from clients.customer_client import CustomerClient
 from clients.product_client import ProductClient
 from configs.db_conn import get_database_connection
-from routes.order_router import create_order
 from services.order_service import OrderService
 from storage.order_storage import OrderStorage
 from tools.order_tool import OrderTool
-from models.order_request import OrderRequest, OrderResponse
-from mcp.server.fastmcp import Context
+from models.order import MostPurchasedCategory
+from models.order_request import (
+    OrderRequest,
+    OrderResponse,
+    MostPurchasedCategoryRequest,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -63,13 +66,27 @@ logger = logging.getLogger(__name__)
 def create_purchase_order(
     order_request: OrderRequest,
 ) -> OrderResponse:
-    logger.info(f"Started request createOrderV1: body={order_request.model_dump()}")
-
     if order_tool is None:
         logger.error(f"No order_tool initiated")
         raise RuntimeError("OrderTool not initialized")
 
     return order_tool.create_order(order_request)
+
+
+@mcp.tool(
+    name="get_most_purchased_category",
+    title="Most purchased category",
+    description="Gets the most purchased category. Usefull when client needs a remomendation based on his/her purchase history",
+    structured_output=True,
+)
+def get_most_purchased_category(
+    request: MostPurchasedCategoryRequest,
+) -> MostPurchasedCategory:
+    if order_tool is None:
+        logger.error(f"No order_tool initiated")
+        raise RuntimeError("OrderTool not initialized")
+
+    return order_tool.get_most_purchased_category(request.customer_email)
 
 
 app = mcp.streamable_http_app()

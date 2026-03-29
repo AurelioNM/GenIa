@@ -16,3 +16,7 @@ class OrderRequest(BaseModel):
 class OrderResponse(BaseModel):
     id: str
     total_value: float
+
+
+class MostPurchasedCategoryRequest(BaseModel):
+    customer_email: str

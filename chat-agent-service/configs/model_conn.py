@@ -22,6 +22,10 @@ async def load_mcp_tools():
                 "transport": "http",
                 "url": f"{os.getenv("WISDOM_MCP_BASE_URL")}/mcp",
             },
+            "order": {
+                "transport": "http",
+                "url": f"{os.getenv("ORDER_MCP_BASE_URL")}/mcp",
+            },
         }
     )
 

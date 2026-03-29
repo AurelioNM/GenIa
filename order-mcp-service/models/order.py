@@ -17,3 +17,7 @@ class Order(BaseModel):
 
 class OrdersPage(BaseModel):
     orders: List[Order]
+
+
+class MostPurchasedCategory(BaseModel):
+    category: str
