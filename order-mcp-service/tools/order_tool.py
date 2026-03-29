@@ -1,10 +1,9 @@
 import logging
 
-from fastapi import HTTPException, status
-
 from models.order_request import OrderRequest, OrderResponse
 from models.order import MostPurchasedCategory
 from services.order_service import OrderService
+from fastmcp.exceptions import ToolError
 
 
 class OrderTool:
@@ -25,23 +24,26 @@ class OrderTool:
 
             self.logger.info(f"Finished request createOrderV1: response={response}")
             return response
-        except ValueError as ex:
+        except Exception as ex:
             self.logger.error(f"Failed request createOrderV1. Error: {ex}")
 
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error: {ex}"
-            )
+            raise ToolError(f"Error: {ex}")
 
     def get_most_purchased_category(self, customer_email: str) -> MostPurchasedCategory:
-        self.logger.info(
-            f"Started request getGetMostPurchasedCategoryV1: email={customer_email}"
-        )
-        category: MostPurchasedCategory = (
-            self.order_service.get_most_purchased_category(customer_email)
-        )
-        response = MostPurchasedCategory(category=category)
+        try:
+            self.logger.info(
+                f"Started request getGetMostPurchasedCategoryV1: email={customer_email}"
+            )
+            category: MostPurchasedCategory = (
+                self.order_service.get_most_purchased_category(customer_email)
+            )
+            response = MostPurchasedCategory(category=category)
 
-        self.logger.info(
-            f"Finished request getGetMostPurchasedCategoryV1: response={response}"
-        )
-        return response
+            self.logger.info(
+                f"Finished request getGetMostPurchasedCategoryV1: response={response}"
+            )
+            return response
+        except Exception as ex:
+            self.logger.error(f"Failed request createOrderV1. Error: {ex}")
+
+            raise ToolError(f"Error: {ex}")
