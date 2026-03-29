@@ -39,7 +39,7 @@ WISDOMS = [
 
 
 mcp = FastMCP(
-    name="wisdom-server",
+    name="wisdom-mcp-service",
     instructions="Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.",
     transport_security=TransportSecuritySettings(
         enable_dns_rebinding_protection=False,

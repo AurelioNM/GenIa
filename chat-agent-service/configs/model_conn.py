@@ -3,9 +3,7 @@ import os
 from langchain_classic.prompts import ChatPromptTemplate
 from langchain_core.prompts import MessagesPlaceholder
 from langchain_groq import ChatGroq
-from tools.process_purchase_tool import ProcessPurchaseTool
 from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
-from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
 from tools.answer_question_tool import GetQuestionAnswerBaseTool
 from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
 from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
@@ -22,7 +20,7 @@ async def load_mcp_tools():
         {
             "weather": {
                 "transport": "http",
-                "url": f"{os.getenv("WISDOM_BASE_URL")}/mcp",
+                "url": f"{os.getenv("WISDOM_MCP_BASE_URL")}/mcp",
             },
         }
     )
@@ -33,9 +31,7 @@ async def load_mcp_tools():
 
 async def get_agent_executor(
     llm_groq: ChatGroq,
-    process_purchase_tool: ProcessPurchaseTool,
     suggest_product_on_category_tool: SuggestProductOnCategoryTool,
-    suggest_product_on_history_tool: SuggestProductOnHistoryTool,
     suggest_day_and_product_on_weather_tool: SuggestDayAndProductOnWeatherTool,
     get_question_answer_base_tool: GetQuestionAnswerBaseTool,
 ) -> AgentExecutor:
@@ -51,9 +47,7 @@ async def get_agent_executor(
     )
 
     tools = [
-        process_purchase_tool.get_tool(),
         suggest_product_on_category_tool.get_tool(),
-        suggest_product_on_history_tool.get_tool(),
         suggest_day_and_product_on_weather_tool.get_tool(),
         get_question_answer_base_tool.get_tool(),
         *mcp_tools,

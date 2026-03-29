@@ -36,11 +36,11 @@ llm-clean-volume:
 	make down && docker volume rm genia_ollama_vol
 
 llm-pull-model:
-# 	docker exec -it order-llm-ollama ollama pull llama3 &&
-	docker exec -it order-llm-ollama ollama pull nomic-embed-text 
+# 	docker exec -it chat-llm-ollama ollama pull llama3 &&
+	docker exec -it chat-llm-ollama ollama pull nomic-embed-text 
 
 llm-list-models:
-	docker exec -it order-llm-ollama ollama list
+	docker exec -it chat-llm-ollama ollama list
 
 mcp-inspector:
 	npx @modelcontextprotocol/inspector

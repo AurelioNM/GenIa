@@ -23,29 +23,6 @@ class OrderService:
         self.customer_client = customer_client
         self.product_client = product_client
 
-    def get_orders_by_customer_email(self, customer_email: str) -> OrdersPage:
-        self.logger.info("Getting orders by customer email...")
-        return self.order_storage.get_orders_by_customer_email(customer_email)
-
-    def get_most_purchased_category(self, customer_email: str) -> str:
-        self.logger.info("Getting most purchased category")
-        orders_page: OrdersPage = self.order_storage.get_orders_by_customer_email(
-            customer_email
-        )
-
-        category_counter = defaultdict(int)
-        for order in orders_page.orders:
-            for product in order.products:
-                quantity = product.quantity if product.quantity is not None else 1
-                category_counter[product.category] += quantity
-
-        self.logger.info(f"Category quantity dict: {category_counter}")
-
-        category = max(category_counter, key=category_counter.get)
-
-        self.logger.info(f"Most purchased category: {category}")
-        return category
-
     def create_order(self, order_request: OrderRequest) -> OrderResponse:
         self.logger.info(f"Creating order: {order_request}")
 
@@ -71,6 +48,29 @@ class OrderService:
 
         id = self.order_storage.create_order(order)
         return OrderResponse(id=id, total_value=total_value)
+
+    def get_orders_by_customer_email(self, customer_email: str) -> OrdersPage:
+        self.logger.info("Getting orders by customer email...")
+        return self.order_storage.get_orders_by_customer_email(customer_email)
+
+    def get_most_purchased_category(self, customer_email: str) -> str:
+        self.logger.info("Getting most purchased category")
+        orders_page: OrdersPage = self.order_storage.get_orders_by_customer_email(
+            customer_email
+        )
+
+        category_counter = defaultdict(int)
+        for order in orders_page.orders:
+            for product in order.products:
+                quantity = product.quantity if product.quantity is not None else 1
+                category_counter[product.category] += quantity
+
+        self.logger.info(f"Category quantity dict: {category_counter}")
+
+        category = max(category_counter, key=category_counter.get)
+
+        self.logger.info(f"Most purchased category: {category}")
+        return category
 
     # TODO move these private functions to the models
     def _update_products_quantity(

@@ -80,15 +80,71 @@ services:
     networks:
       - gen-ia-network
 
-  # ORDER
-  order-service:
+  # CHAT
+  chat-agent-service:
     build:
-      context: ./order-service
-    container_name: order-service
+      context: ./chat-agent-service
+    container_name: chat-agent-service
+    ports:
+      - "8015:8000"
+    volumes:
+      - ./chat-agent-service:/app
+    working_dir: /app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app
+      --log-config /app/configs/log_conf.yml
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - chat-db
+      - chat-cache
+      - chat-llm-ollama
+    networks:
+      - gen-ia-network
+
+  chat-db:
+    image: mongodb/mongodb-atlas-local
+    container_name: chat-db
+    ports:
+      - "27021:27017"
+    volumes:
+      - chat_db_vol:/data/db
+    networks:
+      - gen-ia-network
+
+  chat-cache:
+    image: redis
+    container_name: chat-cache
+    ports:
+      - "6389:6379"
+    networks:
+      - gen-ia-network
+  
+  chat-llm-ollama:
+    image: ollama/ollama:latest
+    container_name: chat-llm-ollama
+    ports:
+      - "11440:11434"
+    environment:
+      - OLLAMA_NUM_THREADS=12
+    volumes:
+      - ollama_vol:/root/.ollama
+    networks:
+      - gen-ia-network
+
+  # ORDER
+  order-mcp-service:
+    build:
+      context: ./order-mcp-service
+    container_name: order-mcp-service
     ports:
       - "8012:8000"
     volumes:
-      - ./order-service:/app
+      - ./order-mcp-service:/app
     working_dir: /app
     command: >
       uvicorn main:app
@@ -101,12 +157,11 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - order-db
-      - order-llm-ollama
     networks:
       - gen-ia-network
 
   order-db:
-    image: mongodb/mongodb-atlas-local
+    image: mongo
     container_name: order-db
     ports:
       - "27020:27017"
@@ -126,26 +181,6 @@ services:
       ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - order-db
-    networks:
-      - gen-ia-network
-
-  order-cache:
-    image: redis
-    container_name: order-cache
-    ports:
-      - "6389:6379"
-    networks:
-      - gen-ia-network
-
-  order-llm-ollama:
-    image: ollama/ollama:latest
-    container_name: order-llm-ollama
-    ports:
-      - "11440:11434"
-    environment:
-      - OLLAMA_NUM_THREADS=12
-    volumes:
-      - ollama_vol:/root/.ollama
     networks:
       - gen-ia-network
 
@@ -189,14 +224,14 @@ services:
       - gen-ia-network
 
   # WISDOM
-  wisdom-service:
+  wisdom-mcp-service:
     build:
-      context: ./wisdom-service
-    container_name: wisdom-service
+      context: ./wisdom-mcp-service
+    container_name: wisdom-mcp-service
     ports:
       - "8014:8000"
     volumes:
-      - ./wisdom-service:/app
+      - ./wisdom-mcp-service:/app
     working_dir: /app
     command: >
       uvicorn main:app
@@ -208,9 +243,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     networks:
-      default:
-        aliases:
-          - localhost
+      # default:
+      #   aliases:
+      #     - localhost
       gen-ia-network:
 
 volumes:
@@ -218,6 +253,7 @@ volumes:
   customer_db_vol: {}
   weather_db_vol: {}
   order_db_vol: {}
+  chat_db_vol: {}
   ollama_vol: {}
 
 networks:

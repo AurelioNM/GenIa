@@ -19,15 +19,6 @@ def get_order_service(request: Request):
 ServiceDep = Annotated[OrderService, Depends(get_order_service)]
 
 
-@router.get("/v1/orders/customers/email/{customer_email}", response_model=OrdersPage)
-def get_orders_by_customer_email(customer_email: str, service: ServiceDep):
-    logger.info(f"Started request getOrdersByCustomerEmailV1: email={customer_email}")
-    response: OrdersPage = service.get_orders_by_customer_email(customer_email)
-
-    logger.info(f"Finished request getOrdersByCustomerEmailV1: response={response}")
-    return response
-
-
 @router.post(
     "/v1/orders",
     status_code=status.HTTP_201_CREATED,
@@ -47,3 +38,12 @@ def create_order(order_request: OrderRequest, service: ServiceDep):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error: {ex}"
         )
+
+
+@router.get("/v1/orders/customers/email/{customer_email}", response_model=OrdersPage)
+def get_orders_by_customer_email(customer_email: str, service: ServiceDep):
+    logger.info(f"Started request getOrdersByCustomerEmailV1: email={customer_email}")
+    response: OrdersPage = service.get_orders_by_customer_email(customer_email)
+
+    logger.info(f"Finished request getOrdersByCustomerEmailV1: response={response}")
+    return response

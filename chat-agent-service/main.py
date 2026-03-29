@@ -16,22 +16,17 @@ from configs.cache_conn import get_cache_connection
 from configs.model_conn import get_agent_executor
 from routes.interaction_router import router as interaction_router
 from routes.chat_studies_router import router as chat_studies_router
-from routes.order_router import router as order_router
 from routes.file_router import router as file_router
 from services.chat_studies_service import ChatStudiesService
-from services.order_service import OrderService
 from services.interaction_service import InteractionService
 from services.file_service import FileService
 from services.intation_service import IntationService
 from services.product_service import ProductService
 from services.weather_service import WeatherService
 from services.cache_service import CacheService
-from storage.order_storage import OrderStorage
 from storage.cache_storage import CacheStorage
 from storage.question_storage import QuestionStorage
-from tools.process_purchase_tool import ProcessPurchaseTool
 from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
-from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
 from tools.answer_question_tool import GetQuestionAnswerBaseTool
 from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
 
@@ -55,14 +50,6 @@ async def lifespan(app: FastAPI):
     weather_client = WeatherClient(httpx)
     weather_service = WeatherService(weather_client=weather_client)
 
-    # order
-    order_storage = OrderStorage(db_connection)
-    order_service = OrderService(
-        order_storage=order_storage,
-        customer_client=customer_client,
-        product_client=product_client,
-    )
-
     # file
     question_storage = QuestionStorage(db_connection)
     file_service = FileService(question_storage=question_storage)
@@ -72,12 +59,8 @@ async def lifespan(app: FastAPI):
     cache_service = CacheService(cache_storage=cache_storage)
 
     # tools
-    process_purchase_tool = ProcessPurchaseTool(order_service=order_service)
     suggest_product_on_category_tool = SuggestProductOnCategoryTool(
         product_service=product_service
-    )
-    suggest_product_on_history_tool = SuggestProductOnHistoryTool(
-        order_service=order_service, product_service=product_service
     )
     suggest_day_and_product_on_weather_tool = SuggestDayAndProductOnWeatherTool(
         weather_service=weather_service, product_service=product_service
@@ -97,9 +80,7 @@ async def lifespan(app: FastAPI):
 
     agent_executor = await get_agent_executor(
         llm_groq=llm_groq,
-        process_purchase_tool=process_purchase_tool,
         suggest_product_on_category_tool=suggest_product_on_category_tool,
-        suggest_product_on_history_tool=suggest_product_on_history_tool,
         suggest_day_and_product_on_weather_tool=suggest_day_and_product_on_weather_tool,
         get_question_answer_base_tool=get_question_answer_base_tool,
     )
@@ -121,7 +102,6 @@ async def lifespan(app: FastAPI):
     chat_studies_service = ChatStudiesService(llm_client=studies_llm_client)
 
     yield {
-        "order_service": order_service,
         "interaction_service": interaction_service,
         "chat_studies_service": chat_studies_service,
         "file_service": file_service,
@@ -129,9 +109,8 @@ async def lifespan(app: FastAPI):
     logger.info("Shutdown order-service")
 
 
-app = FastAPI(lifespan=lifespan, title="Order Service")
+app = FastAPI(lifespan=lifespan, title="Chat Agent Service")
 
-app.include_router(order_router)
 app.include_router(interaction_router)
 app.include_router(chat_studies_router)
 app.include_router(file_router)
