@@ -113,11 +113,7 @@ async def lifespan(app: FastAPI):
     # interaction
     interaction_service = InteractionService(
         intation_service=intation_service,
-        order_service=order_service,
-        product_service=product_service,
-        weather_service=weather_service,
         cache_service=cache_service,
-        question_storage=question_storage,
     )
 
     # studies

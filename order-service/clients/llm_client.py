@@ -16,7 +16,7 @@ class LlmClient:
 
         self.agent_executor = agent_executor
 
-    async def invoke_with_tools(self, prompt) -> str:
+    async def invoke(self, prompt) -> str:
         try:
             self.logger.info(f"Generating LLM output with tools")
 
@@ -26,21 +26,6 @@ class LlmClient:
 
             self.logger.info(f"LLM output response: response={response}")
 
-            return content
-
-        except httpx.RequestError as e:
-            self.logger.error(f"Failed to generate LLM output: {e}")
-            raise
-
-    def invoke(self, prompt) -> str:
-        try:
-            self.logger.info(f"Generating LLM output for prompt={prompt}")
-
-            response = self.default_model.invoke(prompt)
-
-            content = response.content
-
-            self.logger.info(f"LLM output response: {content}")
             return content
 
         except httpx.RequestError as e:

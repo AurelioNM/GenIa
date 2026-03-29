@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from storage.cache_storage import CacheStorage
-from models.interaction import InteractionRequest, InteractionOutput
+from models.interaction import InteractionRequest, InteractionOutputV2
 
 
 class CacheService:
@@ -30,7 +30,7 @@ class CacheService:
         session_id: str,
         history: List[dict],
         input: InteractionRequest,
-        output: InteractionOutput,
+        output: InteractionOutputV2,
     ):
         self.logger.info(
             f"Saving chat history on cache: session_id={session_id}, input={input.input}, output={output.output}"
