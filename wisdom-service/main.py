@@ -1,15 +1,11 @@
 import random
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
+from pydantic import BaseModel
 
 
-mcp = FastMCP(
-    name="wisdom-server",
-    instructions="Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.",
-    transport_security=TransportSecuritySettings(
-        enable_dns_rebinding_protection=False,
-    ),
-)
+class WisdomOutput(BaseModel):
+    wisdom: str
 
 
 WISDOMS = [
@@ -42,15 +38,25 @@ WISDOMS = [
 ]
 
 
-@mcp.tool()
-def wisdom_of_the_day() -> dict:
-    """
-    Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.
-    """
-    result = random.choice(WISDOMS)
-    print(f"Selected wisdom: {result}")
+mcp = FastMCP(
+    name="wisdom-server",
+    instructions="Use this tool when the user asks for daily wisdom, inspirational quote, funny advice, or motivational sentence.",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=False,
+    ),
+)
 
-    return {"wisdom": result}
+
+@mcp.tool(
+    name="wisdom_of_the_day",
+    title="Wisdom of the Day",
+    description="Returns a random inspirational quote, motivational sentence, or piece of advice.",
+    structured_output=True,
+)
+def wisdom_of_the_day() -> WisdomOutput:
+    result = random.choice(WISDOMS)
+
+    return WisdomOutput(wisdom=result)
 
 
 app = mcp.streamable_http_app()

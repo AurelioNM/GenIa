@@ -1,6 +1,5 @@
 import os
 
-from langchain.tools import tool
 from langchain_classic.prompts import ChatPromptTemplate
 from langchain_core.prompts import MessagesPlaceholder
 from langchain_groq import ChatGroq
@@ -9,9 +8,7 @@ from tools.suggest_product_on_category_tool import SuggestProductOnCategoryTool
 from tools.suggest_product_on_history_tool import SuggestProductOnHistoryTool
 from tools.answer_question_tool import GetQuestionAnswerBaseTool
 from tools.suggest_day_and_product_on_weather import SuggestDayAndProductOnWeatherTool
-from langchain_classic.agents import AgentExecutor, Tool, create_tool_calling_agent
-from mcp import ClientSession
-from mcp.client.sse import sse_client
+from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 
@@ -25,7 +22,7 @@ async def load_mcp_tools():
         {
             "weather": {
                 "transport": "http",
-                "url": "http://wisdom-service:8000/mcp",
+                "url": f"{os.getenv("WISDOM_BASE_URL")}/mcp",
             },
         }
     )
@@ -34,7 +31,7 @@ async def load_mcp_tools():
     return tools
 
 
-async def get_model_connection(
+async def get_agent_executor(
     llm_groq: ChatGroq,
     process_purchase_tool: ProcessPurchaseTool,
     suggest_product_on_category_tool: SuggestProductOnCategoryTool,

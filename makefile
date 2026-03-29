@@ -45,6 +45,7 @@ llm-list-models:
 mcp-inspector:
 	npx @modelcontextprotocol/inspector
 
+
 # SERVICE UTILS
 log:
 	@SERVICE=$(filter-out $@,$(MAKECMDGOALS)); \
