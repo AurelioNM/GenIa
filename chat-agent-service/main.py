@@ -8,7 +8,6 @@ from langchain_groq import ChatGroq
 from langchain_ollama import ChatOllama
 from clients.llm_client import LlmClient
 from clients.studies_llm_client import StudiesLlmClient
-from clients.customer_client import CustomerClient
 from clients.product_client import ProductClient
 from clients.weather_client import WeatherClient
 from configs.db_conn import get_database_connection
@@ -42,9 +41,6 @@ async def lifespan(app: FastAPI):
     # product
     product_client = ProductClient(httpx)
     product_service = ProductService(product_client=product_client)
-
-    # customer
-    customer_client = CustomerClient(httpx)
 
     # weather
     weather_client = WeatherClient(httpx)
