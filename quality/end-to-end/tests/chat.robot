@@ -3,15 +3,6 @@ Resource    ../resources/common.robot
 Resource   ../variables/env.robot
 
 *** Test Cases ***
-Should Interact with intation WISDOM_PHRASE Successfully
-    Create Chat Session
-
-    Execute Chat Interaction
-    ...    ${SESSION_ID}
-    ...    ${CUSTOMER_EMAIL}
-    ...    Give me the wisdom of the day
-    Sleep    5s
-
 Should Interact with intation SUGGEST_PRODUCT_BASED_ON_CATEGORY Successfully
     Create Chat Session
 
@@ -61,6 +52,14 @@ Should Interact with intation TARANTINO_QUESTION Successfully
     ...    Did Tarantino won the oscar? If yes, with movies?
     Sleep    5s
 
+Should Interact with intation WISDOM_PHRASE Successfully
+    Create Chat Session
+
+    Execute Chat Interaction
+    ...    ${SESSION_ID}
+    ...    ${CUSTOMER_EMAIL}
+    ...    Give me the wisdom of the day
+    Sleep    5s
 
 Should Interact with intation UNKNOWN Successfully
     Create Chat Session
