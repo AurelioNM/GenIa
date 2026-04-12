@@ -11,6 +11,7 @@ ulid-py
 pytest-cov
 httpx
 boto3
+aioboto3
 langchain 
 langchain-community 
 langchain-classic

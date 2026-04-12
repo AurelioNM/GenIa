@@ -6,6 +6,8 @@ from models.weather import CityWeather, PagedCityWeather, PagedCityWeatherV2, We
 from services.forecast_service import ForecastService
 from storages.city_storage import CityStorage
 from storages.weather_storage import WeatherStorage
+from queues.sqs_client import SQSClient
+from models.payload import ProcessCityPayload
 
 
 class WeatherService:
@@ -15,12 +17,14 @@ class WeatherService:
         city_storage: CityStorage,
         open_weather_client: OpenWeatherClient,
         forecast_service: ForecastService,
+        sqs_client: SQSClient,
     ):
         self.logger = logging.getLogger(__name__)
         self.weather_storage = weather_storage
         self.city_storage = city_storage
         self.open_weather_client = open_weather_client
         self.forecast_service = forecast_service
+        self.sqs_client = sqs_client
 
     async def get_weather_by_city_name(self, city_name: str) -> CityWeather:
         self.logger.info("Getting weather by city_name")
@@ -46,8 +50,12 @@ class WeatherService:
         cities_list = await self.city_storage.get_all_cities_names()
 
         for city_name in cities_list:
-            forecast: OpenWeatherForecastResponse = (
-                await self.open_weather_client.get_city_forecast(city_name)
-            )
+            queue_payload = ProcessCityPayload(name=city_name)
+            await self.sqs_client.send_message(queue_payload.model_dump_json())
 
-            await self.forecast_service.process_forecast(city_name, forecast)
+    async def handle_city_process(self, city_name: str):
+        forecast: OpenWeatherForecastResponse = (
+            await self.open_weather_client.get_city_forecast(city_name)
+        )
+
+        await self.forecast_service.process_forecast(city_name, forecast)

@@ -9,4 +9,4 @@ PyYAML
 ulid-py
 pytest-cov
 httpx
-boto3
+aioboto3
