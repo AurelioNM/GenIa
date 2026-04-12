@@ -22,22 +22,28 @@ class WeatherService:
         self.open_weather_client = open_weather_client
         self.forecast_service = forecast_service
 
-    def get_weather_by_city_name(self, city_name: str) -> CityWeather:
+    async def get_weather_by_city_name(self, city_name: str) -> CityWeather:
         self.logger.info("Getting weather by city_name")
-        return self.weather_storage.get_weather_by_city_name(city_name)
+        return await self.weather_storage.get_weather_by_city_name(city_name)
 
-    def get_cities_weather(self, page: int, size: int) -> PagedCityWeather:
+    async def get_cities_weather(self, page: int, size: int) -> PagedCityWeather:
         self.logger.info("Getting cities weather by page and size")
-        return self.weather_storage.get_paged_cities_weather(page, size)
+        return await self.weather_storage.get_paged_cities_weather(page, size)
 
-    def get_cities_weather_v2(self, page: int, size: int) -> PagedCityWeatherV2:
-        self.logger.info("Getting cities weather v2 by page and size")
-        return self.weather_storage.get_paged_cities_weather_v2(page, size)
+    async def get_cities_weather_v2(
+        self, page: int, size: int, correlation
+    ) -> PagedCityWeatherV2:
+        self.logger.info(
+            f"Getting cities weather v2 by page and size: correlation={correlation}"
+        )
+        return await self.weather_storage.get_paged_cities_weather_v2(
+            page, size, correlation
+        )
 
-    def run_job(self):
+    async def run_job(self):
         self.logger.info("Running job")
 
-        cities_list = self.city_storage.get_all_cities_names()
+        cities_list = await self.city_storage.get_all_cities_names()
 
         for city_name in cities_list:
             forecast: OpenWeatherForecastResponse = (

@@ -1,4 +1,5 @@
 import logging
+import random
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
@@ -20,10 +21,10 @@ ServiceDep = Annotated[WeatherService, Depends(get_weather_service)]
 
 
 @router.get("/v1/weathers/cities/{city_name}", response_model=CityWeather)
-def get_weather_by_city_name(city_name: str, service: ServiceDep):
+async def get_weather_by_city_name(city_name: str, service: ServiceDep):
     try:
         logger.info(f"Started request getWeatherByCityName: city_name={city_name}")
-        weather: CityWeather = service.get_weather_by_city_name(city_name)
+        weather: CityWeather = await service.get_weather_by_city_name(city_name)
 
         logger.info(f"Finished request getWeatherByCityName: response={weather}")
         return weather
@@ -36,7 +37,7 @@ def get_weather_by_city_name(city_name: str, service: ServiceDep):
 
 
 @router.get("/v1/weathers/cities", response_model=PagedCityWeather)
-def get_paged_cities_weather(
+async def get_paged_cities_weather(
     page: int,
     size: int,
     service: ServiceDep,
@@ -44,7 +45,7 @@ def get_paged_cities_weather(
     try:
         logger.info(f"Started request getPagedCitiesWeather: page={page} size={size}")
 
-        result: PagedCityWeather = service.get_cities_weather(page, size)
+        result: PagedCityWeather = await service.get_cities_weather(page, size)
 
         logger.info(
             f"Finished request getPagedCitiesWeather: "
@@ -64,19 +65,25 @@ def get_paged_cities_weather(
 
 
 @router.get("/v2/weathers/cities", response_model=PagedCityWeatherV2)
-def get_paged_cities_weather(
+async def get_paged_cities_weather(
     page: int,
     size: int,
     service: ServiceDep,
 ):
     try:
-        logger.info(f"Started request getPagedCitiesWeatherV2: page={page} size={size}")
-
-        result: PagedCityWeatherV2 = service.get_cities_weather_v2(page, size)
+        correlation = random.randint(1, 50)
 
         logger.info(
-            f"Finished request getPagedCitiesWeatherV2: "
-            f"cities_count={len(result.cities_weather)} "
+            f"Started request getPagedCitiesWeatherV2: page={page} size={size}, correlation={correlation}"
+        )
+
+        result: PagedCityWeatherV2 = await service.get_cities_weather_v2(
+            page, size, correlation
+        )
+
+        logger.info(
+            f"Finished request getPagedCitiesWeatherV2: correlation={correlation}, "
+            f"cities_count={len(result.cities_weather)}, "
             f"has_next_page={result.has_next_page}"
         )
 
@@ -92,11 +99,11 @@ def get_paged_cities_weather(
 
 
 @router.post("/v1/run-job")
-def run_job(service: ServiceDep):
+async def run_job(service: ServiceDep):
     try:
         logger.info("Started request runJob")
 
-        service.run_job()
+        await service.run_job()
 
         logger.info("Finished request runJob")
 

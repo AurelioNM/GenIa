@@ -1,6 +1,5 @@
 import logging
 from contextlib import asynccontextmanager
-import os
 
 from fastapi import FastAPI
 import httpx
@@ -18,6 +17,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db_connection = get_database_connection()
+    await db_connection.open()
 
     weather_storage = WeatherStorage(db_connection=db_connection)
     city_storage = CityStorage(db_connection=db_connection)
@@ -32,6 +32,7 @@ async def lifespan(app: FastAPI):
         "weather_service": weather_service,
     }
     logger.info("Shutdown weather-service")
+    await db_connection.close()
 
 
 app = FastAPI(lifespan=lifespan, title="Weather Service")

@@ -2,6 +2,7 @@ fastApi
 uvicorn
 pydantic
 pytest
+psycopg[binary,pool]
 psycopg2-binary
 python-dotenv
 pylint
