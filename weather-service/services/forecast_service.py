@@ -17,7 +17,9 @@ class ForecastService:
         self.logger = logging.getLogger(__name__)
         self.weather_storage = weather_storage
 
-    def process_forecast(self, city_name: str, forecast: OpenWeatherForecastResponse):
+    async def process_forecast(
+        self, city_name: str, forecast: OpenWeatherForecastResponse
+    ):
         self.logger.info("Processing forecast")
 
         filtered_forecasts: List[ForecastItem] = self.filter_forecast_by_day(forecast)
@@ -26,14 +28,14 @@ class ForecastService:
             filtered_forecasts
         )
 
-        self.weather_storage.update_forecast_by_city(city_name, weather_list)
+        await self.weather_storage.update_forecast_by_city(city_name, weather_list)
 
         self.logger.info("Finished processing forecast")
 
     def filter_forecast_by_day(
         self, forecast: OpenWeatherForecastResponse
     ) -> List[ForecastItem]:
-        self.logger.info(f"Filtering forecast. size={forecast.cnt}")
+        self.logger.info(f"Filtering forecast: size={forecast.cnt}")
 
         selected_by_day: Dict[str, ForecastItem] = {}
 
@@ -51,7 +53,7 @@ class ForecastService:
 
         filtered = list(selected_by_day.values())
 
-        self.logger.info(f"Filtered forecast size={len(filtered)}, result={filtered}")
+        self.logger.info(f"Filtered forecast: size={len(filtered)}")
 
         return filtered
 

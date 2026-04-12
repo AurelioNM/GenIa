@@ -47,7 +47,7 @@ class WeatherService:
 
         for city_name in cities_list:
             forecast: OpenWeatherForecastResponse = (
-                self.open_weather_client.get_city_forecast(city_name)
+                await self.open_weather_client.get_city_forecast(city_name)
             )
 
-            self.forecast_service.process_forecast(city_name, forecast)
+            await self.forecast_service.process_forecast(city_name, forecast)
